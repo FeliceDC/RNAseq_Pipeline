@@ -49,5 +49,31 @@ IMMUCELLAI(FEATURECOUNTS.out.counts)
 PLOT_DECONVOLUTION( IMMUCELLAI.out.fractions )
 
 log.info "The analysis completed successfully!"
+
+}
+
+
+output {
+
+fastqc_results {
+        path 
+
+
+trimgalore_results {
+        path TRIMGALORE.out.reads
+        path TRIMGALORE.out.log
+        mode 'copy'
+    }
+
+
+
+featurecounts_results {
+        path FEATURECOUNTS.out.counts
+        path FEATURECOUNTS.out.summary
+        mode 'copy'
+    }
+
+
+
 }
 
