@@ -1,10 +1,8 @@
 process TRIMGALORE {
-    tag "Trimming su $sample_id"
+    tag "Trimming on $sample_id"
     label 'process_high'
 
     container 'quay.io/biocontainers/trim-galore:0.6.11--hdfd78af_0'
-
-publishDir "${params.outdir}/trimgalore", mode: 'copy'
 
     input:
     tuple val(sample_id), path(reads)
