@@ -1,9 +1,7 @@
 process FEATURECOUNTS {
-    tag "All_Samples"
+    tag "All Samples"
     label 'process_high'
     container 'quay.io/biocontainers/subread:2.0.6--he4a0461_0'
-
-publishDir "${params.outdir}/featureCounts", mode: 'copy'
 
     input:
     path gtf
