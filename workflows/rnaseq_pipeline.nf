@@ -56,7 +56,10 @@ log.info "The analysis completed successfully!"
 output {
 
 fastqc_results {
-        path 
+        path FASTQC.out.html
+        path FASTQC.out.zip
+        mode 'copy'
+    }
 
 
 trimgalore_results {
@@ -65,6 +68,16 @@ trimgalore_results {
         mode 'copy'
     }
 
+star_index_results {
+        path STAR_INDEX.out.index
+        mode 'copy' 
+    }
+
+    star_align_results {
+        path STAR_ALIGN.out.bam
+        path STAR_ALIGN.out.log
+        mode 'copy'
+    }
 
 
 featurecounts_results {
@@ -73,6 +86,33 @@ featurecounts_results {
         mode 'copy'
     }
 
+
+
+
+
+deseq2_results {
+        path DESEQ2.out.results_tables
+        path DESEQ2.out.results_pdf
+        mode 'copy'
+    }
+
+enrichr_results {
+        path ENRICHR.out.enrichr_results
+        mode 'copy'
+    }
+
+
+immucellai_results {
+        path IMMUCELLAI.out.tpm_matrix
+        path IMMUCELLAI.out.fractions
+        mode 'copy'
+    }
+
+
+deconvolution_plots {
+        path PLOT_DECONVOLUTION.out.plots
+        mode 'copy'
+    }
 
 
 }
