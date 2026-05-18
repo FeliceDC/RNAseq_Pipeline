@@ -47,9 +47,6 @@ ENRICHR(DESEQ2.out.results_tables)
 IMMUCELLAI(FEATURECOUNTS.out.counts)
 
 PLOT_DECONVOLUTION( IMMUCELLAI.out.fractions )
-
-log.info "The analysis completed successfully!"
-
 }
 
 
@@ -72,7 +69,7 @@ star_index_results {
         mode 'copy' 
     }
 
-    star_align_results {
+star_align_results {
         path STAR_ALIGN.out.bam
         path STAR_ALIGN.out.log
         mode 'copy'
@@ -114,4 +111,3 @@ deconvolution_plots {
     }
 
 }
-
