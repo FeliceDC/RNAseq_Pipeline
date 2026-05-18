@@ -80,6 +80,7 @@ publish:
         enrichr_results       = RNA_SEQ_ANALYSIS.out.enrichr_results
         immucellai_results    = RNA_SEQ_ANALYSIS.out.immucellai_results
         deconvolution_plots   = RNA_SEQ_ANALYSIS.out.deconvolution_plots
+        imsig_results       = RNA_SEQ_ANALYSIS.out.imsig_results
 
 }
 
@@ -92,6 +93,7 @@ output {
     multiqc_results       { path "multiqc"; mode 'copy' }
     deseq2_results        { path "deseq2"; mode 'copy' }
     enrichr_results       { path "enrichr"; mode 'copy' }
-    immucellai_results    { path "deconvolution"; mode 'copy' }
+    immucellai_results    { path "deconvolution/immucellai"; mode 'copy' }
     deconvolution_plots   { path "deconvolution/plots"; mode 'copy' }
+    imsig_results       { path "deconvolution/imsig"; mode 'copy' }
 }
