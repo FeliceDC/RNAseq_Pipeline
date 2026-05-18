@@ -1,9 +1,6 @@
 process ENRICHR {
     tag "Pathway Analysis"
     label 'process_low'
-
-    publishDir "${params.outdir}/enrichr", mode: 'copy'
-
     
     container 'quay.io/biocontainers/r-base:4.3.1'
     input:
