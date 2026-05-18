@@ -27,8 +27,6 @@ process STAR_ALIGN {
     label 'process_high'
     container 'quay.io/biocontainers/star:2.7.10b--h6b7c446_1'
 
-publishDir "${params.outdir}/star", mode: 'copy'
-
     input:
     path index
     tuple val(sample_id), path(reads)
