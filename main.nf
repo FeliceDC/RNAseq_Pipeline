@@ -68,4 +68,30 @@ include {RNA_SEQ_ANALYSIS} from './workflows/rnaseq_pipeline'
 
 workflow {
 RNA_SEQ_ANALYSIS()
+
+publish:
+        fastqc_results        = RNA_SEQ_ANALYSIS.out.fastqc_results
+        trimgalore_results    = RNA_SEQ_ANALYSIS.out.trimgalore_results
+        star_index_results    = RNA_SEQ_ANALYSIS.out.star_index_results
+        star_align_results    = RNA_SEQ_ANALYSIS.out.star_align_results
+        featurecounts_results = RNA_SEQ_ANALYSIS.out.featurecounts_results
+        multiqc_results       = RNA_SEQ_ANALYSIS.out.multiqc_results
+        deseq2_results        = RNA_SEQ_ANALYSIS.out.deseq2_results
+        enrichr_results       = RNA_SEQ_ANALYSIS.out.enrichr_results
+        immucellai_results    = RNA_SEQ_ANALYSIS.out.immucellai_results
+        deconvolution_plots   = RNA_SEQ_ANALYSIS.out.deconvolution_plots
+
+}
+
+output {
+    fastqc_results        { path "fastqc"; mode 'copy' }
+    trimgalore_results    { path "trimgalore"; mode 'copy' }
+    star_index_results    { path "star/index"; mode 'copy' }
+    star_align_results    { path "star/alignment"; mode 'copy' }
+    featurecounts_results { path "featureCounts"; mode 'copy' }
+    multiqc_results       { path "multiqc"; mode 'copy' }
+    deseq2_results        { path "deseq2"; mode 'copy' }
+    enrichr_results       { path "enrichr"; mode 'copy' }
+    immucellai_results    { path "deconvolution"; mode 'copy' }
+    deconvolution_plots   { path "deconvolution/plots"; mode 'copy' }
 }
