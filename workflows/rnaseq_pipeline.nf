@@ -49,6 +49,9 @@ IMMUCELLAI(FEATURECOUNTS.out.counts)
 PLOT_DECONVOLUTION( IMMUCELLAI.out.fractions )
 }
 
+publish:
+
+
 
 output {
 
