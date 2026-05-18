@@ -49,7 +49,7 @@ IMMUCELLAI(FEATURECOUNTS.out.counts)
 PLOT_DECONVOLUTION( IMMUCELLAI.out.fractions )
 
 
-publish:
+emit:
         fastqc_results        = FASTQC.out.html.mix(FASTQC.out.zip)
         trimgalore_results    = TRIMGALORE.out.reads.mix(TRIMGALORE.out.log)
         star_index_results    = STAR_INDEX.out.index
@@ -60,60 +60,4 @@ publish:
         enrichr_results       = ENRICHR.out.enrichr_results
         immucellai_results    = IMMUCELLAI.out.tpm_matrix.mix(IMMUCELLAI.out.fractions)
         deconvolution_plots   = PLOT_DECONVOLUTION.out.plots
-}
-
-
-output {
-
-  fastqc_results {
-        path "fastqc"
-        mode 'copy'
-    }
-
-  trimgalore_results {
-        path "trimgalore"
-        mode 'copy'
-    }
-
-  star_index_results {
-        path "star/index"
-        mode 'copy' 
-    }
-
-  star_align_results {
-        path "star/alignment"
-        mode 'copy'
-    }
-
-  featurecounts_results {
-        path "featureCounts"
-        mode 'copy'
-    }
-
-  multiqc_results {
-        path "multiqc"
-        mode 'copy'
-    }
-
-  deseq2_results {
-        path "deseq2"
-        mode 'copy'
-    }
-
-  enrichr_results {
-        path "enrichr"
-        mode 'copy'
-    }
-
-
-  immucellai_results {
-        path "deconvolution"
-        mode 'copy'
-    }
-
-  deconvolution_plots {
-        path "deconvolution/plots"
-        mode 'copy'
-    }
-
 }
