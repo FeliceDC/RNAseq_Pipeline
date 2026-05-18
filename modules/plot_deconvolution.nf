@@ -2,8 +2,6 @@ process PLOT_DECONVOLUTION {
     tag "Plot TME"
     label 'process_low'
 
-    publishDir "${params.outdir}/deconvolution/plots", mode: 'copy'
-
     container 'python:3.10-slim'
 
     input:
