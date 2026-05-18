@@ -81,7 +81,7 @@ output {
     }
 
   star_align_results {
-        path "star/alignment
+        path "star/alignment"
         mode 'copy'
     }
 
