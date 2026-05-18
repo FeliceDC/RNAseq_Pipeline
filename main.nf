@@ -53,15 +53,6 @@ workflow.onComplete {
     } else {
         println "❌ Oops... the pipeline stopped due to an error."
     }
-
-    if (params.email) {
-        try {
-            sendMail(to: params.email, subject: "RNAseq Pipeline - Status", body: msg)
-            println "📧 Notification email successfully sent to: ${params.email}"
-        } catch (Exception e) {
-            println "⚠️ Unable to send the email."
-        }
-    }
 }
 
 include {RNA_SEQ_ANALYSIS} from './workflows/rnaseq_pipeline'
