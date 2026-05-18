@@ -38,7 +38,7 @@ FEATURECOUNTS(ch_gtf, ch_bams_raccolti)
         FEATURECOUNTS.out.summary
     )
 
-    MULTIQC( ch_multiqc_files.collect() )
+MULTIQC( ch_multiqc_files.collect() )
 
 DESEQ2(FEATURECOUNTS.out.counts, file(params.samplesheet))
 
@@ -61,7 +61,6 @@ fastqc_results {
         mode 'copy'
     }
 
-
 trimgalore_results {
         path TRIMGALORE.out.reads
         path TRIMGALORE.out.log
@@ -79,16 +78,17 @@ star_index_results {
         mode 'copy'
     }
 
-
 featurecounts_results {
         path FEATURECOUNTS.out.counts
         path FEATURECOUNTS.out.summary
         mode 'copy'
     }
 
-
-
-
+multiqc_results {
+        path MULTIQC.out.report
+        path MULTIQC.out.data
+        mode 'copy'
+    }
 
 deseq2_results {
         path DESEQ2.out.results_tables
@@ -108,12 +108,10 @@ immucellai_results {
         mode 'copy'
     }
 
-
 deconvolution_plots {
         path PLOT_DECONVOLUTION.out.plots
         mode 'copy'
     }
-
 
 }
 
