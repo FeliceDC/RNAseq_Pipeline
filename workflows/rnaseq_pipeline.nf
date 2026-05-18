@@ -47,68 +47,77 @@ ENRICHR(DESEQ2.out.results_tables)
 IMMUCELLAI(FEATURECOUNTS.out.counts)
 
 PLOT_DECONVOLUTION( IMMUCELLAI.out.fractions )
-}
+
 
 publish:
-
+        fastqc_results        = FASTQC.out.html.mix(FASTQC.out.zip)
+        trimgalore_results    = TRIMGALORE.out.reads.mix(TRIMGALORE.out.log)
+        star_index_results    = STAR_INDEX.out.index
+        star_align_results    = STAR_ALIGN.out.bam.mix(STAR_ALIGN.out.log)
+        featurecounts_results = FEATURECOUNTS.out.counts.mix(FEATURECOUNTS.out.summary)
+        multiqc_results       = MULTIQC.out.report.mix(MULTIQC.out.data)
+        deseq2_results        = DESEQ2.out.results_tables.mix(DESEQ2.out.results_pdf)
+        enrichr_results       = ENRICHR.out.enrichr_results
+        immucellai_results    = IMMUCELLAI.out.tpm_matrix.mix(IMMUCELLAI.out.fractions)
+        deconvolution_plots   = PLOT_DECONVOLUTION.out.plots
+}
 
 
 output {
 
-fastqc_results {
-        path FASTQC.out.html
-        path FASTQC.out.zip
+  fastqc_results {
+        path "fastqc"
         mode 'copy'
     }
 
-trimgalore_results {
+  trimgalore_results {
         path TRIMGALORE.out.reads
         path TRIMGALORE.out.log
         mode 'copy'
     }
 
-star_index_results {
+  star_index_results {
         path STAR_INDEX.out.index
         mode 'copy' 
     }
 
-star_align_results {
+  star_align_results {
         path STAR_ALIGN.out.bam
         path STAR_ALIGN.out.log
         mode 'copy'
     }
 
-featurecounts_results {
+  featurecounts_results {
         path FEATURECOUNTS.out.counts
         path FEATURECOUNTS.out.summary
         mode 'copy'
     }
 
-multiqc_results {
+  multiqc_results {
         path MULTIQC.out.report
         path MULTIQC.out.data
         mode 'copy'
     }
 
-deseq2_results {
+  deseq2_results {
         path DESEQ2.out.results_tables
         path DESEQ2.out.results_pdf
         mode 'copy'
     }
 
-enrichr_results {
+  enrichr_results {
         path ENRICHR.out.enrichr_results
         mode 'copy'
     }
 
 
-immucellai_results {
+  immucellai_results {
         path IMMUCELLAI.out.tpm_matrix
         path IMMUCELLAI.out.fractions
         mode 'copy'
     }
 
-deconvolution_plots {
+  deconvolution_plots {
         path PLOT_DECONVOLUTION.out.plots
         mode 'copy'
     }
