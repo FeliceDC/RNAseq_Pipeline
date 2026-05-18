@@ -7,6 +7,7 @@ include { DESEQ2 } from '../modules/deseq2'
 include { ENRICHR } from '../modules/enrichr'
 include { IMMUCELLAI } from '../modules/immucellai'
 include { PLOT_DECONVOLUTION } from '../modules/plot_deconvolution'
+include { IMSIG } from '../modules/imsig'
 
 workflow RNA_SEQ_ANALYSIS {
 log.info "RNA-seq analysis started..."
@@ -48,6 +49,8 @@ IMMUCELLAI(FEATURECOUNTS.out.counts)
 
 PLOT_DECONVOLUTION( IMMUCELLAI.out.fractions )
 
+IMSIG(FEATURECOUNTS.out.counts)
+
 
 emit:
         fastqc_results        = FASTQC.out.html.mix(FASTQC.out.zip)
@@ -60,4 +63,5 @@ emit:
         enrichr_results       = ENRICHR.out.enrichr_results
         immucellai_results    = IMMUCELLAI.out.tpm_matrix.mix(IMMUCELLAI.out.fractions)
         deconvolution_plots   = PLOT_DECONVOLUTION.out.plots
+        imsig_results       = IMSIG.out.results
 }
