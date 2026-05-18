@@ -112,7 +112,7 @@ output {
     }
 
   deconvolution_plots {
-        path deconvolution/plots
+        path "deconvolution/plots"
         mode 'copy'
     }
 
