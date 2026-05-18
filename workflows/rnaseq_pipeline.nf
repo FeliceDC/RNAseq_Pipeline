@@ -71,54 +71,48 @@ output {
     }
 
   trimgalore_results {
-        path TRIMGALORE.out.reads
-        path TRIMGALORE.out.log
+        path "trimgalore"
         mode 'copy'
     }
 
   star_index_results {
-        path STAR_INDEX.out.index
+        path "star/index"
         mode 'copy' 
     }
 
   star_align_results {
-        path STAR_ALIGN.out.bam
-        path STAR_ALIGN.out.log
+        path "star/alignment
         mode 'copy'
     }
 
   featurecounts_results {
-        path FEATURECOUNTS.out.counts
-        path FEATURECOUNTS.out.summary
+        path "featureCounts"
         mode 'copy'
     }
 
   multiqc_results {
-        path MULTIQC.out.report
-        path MULTIQC.out.data
+        path "multiqc"
         mode 'copy'
     }
 
   deseq2_results {
-        path DESEQ2.out.results_tables
-        path DESEQ2.out.results_pdf
+        path "deseq2"
         mode 'copy'
     }
 
   enrichr_results {
-        path ENRICHR.out.enrichr_results
+        path "enrichr"
         mode 'copy'
     }
 
 
   immucellai_results {
-        path IMMUCELLAI.out.tpm_matrix
-        path IMMUCELLAI.out.fractions
+        path "deconvolution"
         mode 'copy'
     }
 
   deconvolution_plots {
-        path PLOT_DECONVOLUTION.out.plots
+        path deconvolution/plots
         mode 'copy'
     }
 
