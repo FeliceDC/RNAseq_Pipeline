@@ -2,8 +2,6 @@ process IMMUCELLAI {
     tag "TME Deconvolution v2"
     label 'process_high'
 
-    publishDir "${params.outdir}/deconvolution", mode: 'copy'
-
     container 'python:3.10-slim'
 
     input:
