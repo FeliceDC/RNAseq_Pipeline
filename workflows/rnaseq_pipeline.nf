@@ -52,6 +52,8 @@ PLOT_DECONVOLUTION( IMMUCELLAI.out.fractions )
 
 IMSIG(FEATURECOUNTS.out.counts)
 
+ARRIBA(STAR_ALIGN.out.bam, ch_fasta, ch_gtf)
+
 
 emit:
         fastqc_results        = FASTQC.out.html.mix(FASTQC.out.zip)
@@ -65,4 +67,6 @@ emit:
         immucellai_results    = IMMUCELLAI.out.tpm_matrix.mix(IMMUCELLAI.out.fractions)
         deconvolution_plots   = PLOT_DECONVOLUTION.out.plots
         imsig_results       = IMSIG.out.results
+        arriba_fusions      = ARRIBA.out.fusions
+        arriba_discarded    = ARRIBA.out.discarded
 }
