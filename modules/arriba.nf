@@ -22,6 +22,9 @@ process ARRIBA {
         -x ${bam} \\
         -a ${fasta} \\
         -g ${gtf} \\
+        -b /arriba_v2.4.0/database/blacklist_hg38_GRCh38_v2.4.0.tsv.gz \\
+        -k /arriba_v2.4.0/database/known_fusions_hg38_GRCh38_v2.4.0.tsv.gz \\
+        -p /arriba_v2.4.0/database/protein_domains_hg38_GRCh38_v2.4.0.gff3 \\
         -o ${sample_id}_fusions.tsv \\
         -O ${sample_id}_fusions.discarded.tsv
     """
