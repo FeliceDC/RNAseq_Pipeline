@@ -3,7 +3,7 @@ process ARRIBA {
     label 'process_high'
 
 
-    container 'quay.io/biocontainers/arriba:2.4.0--h0014604_2'
+    container 'uhrigs/arriba:2.4.0'
 
     input:
 
