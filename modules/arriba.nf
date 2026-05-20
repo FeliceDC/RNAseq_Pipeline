@@ -1,5 +1,5 @@
 process ARRIBA {
-    tag "Arriba su ${sample_id}"
+    tag "Arriba on ${sample_id}"
     label 'process_high'
 
 
@@ -18,7 +18,7 @@ process ARRIBA {
 
     script:
     """
-    arriba \\
+    /arriba_v2.4.0/arriba \\
         -x ${bam} \\
         -a ${fasta} \\
         -g ${gtf} \\
