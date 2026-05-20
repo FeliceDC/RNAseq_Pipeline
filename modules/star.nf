@@ -39,11 +39,24 @@ process STAR_ALIGN {
 
     script:
     """
+    script:
+    """
     STAR --genomeDir $index \\
          --readFilesIn $reads \\
          --readFilesCommand zcat \\
          --outFileNamePrefix ${sample_id}. \\
          --outSAMtype BAM SortedByCoordinate \\
-         --runThreadN ${task.cpus}
+         --runThreadN ${task.cpus} \\
+         --chimSegmentMin 10 \\
+         --chimOutType WithinBAM SoftClip \\
+         --chimJunctionOverhangMin 10 \\
+         --chimScoreMin 1 \\
+         --chimScoreDropMax 30 \\
+         --chimScoreJunctionNonGTAG 0 \\
+         --chimScoreSeparation 1 \\
+         --alignSJstitchMismatchNmax 5 -1 5 5 \\
+         --chimSegmentReadGapMax 3 \\
+         --outSAMattributes NH HI AS NM MD SA
+    """
     """
 }
