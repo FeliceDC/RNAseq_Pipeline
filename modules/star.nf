@@ -39,8 +39,6 @@ process STAR_ALIGN {
 
     script:
     """
-    script:
-    """
     STAR --genomeDir $index \\
          --readFilesIn $reads \\
          --readFilesCommand zcat \\
@@ -57,6 +55,5 @@ process STAR_ALIGN {
          --alignSJstitchMismatchNmax 5 -1 5 5 \\
          --chimSegmentReadGapMax 3 \\
          --outSAMattributes NH HI AS NM MD SA
-    """
     """
 }
