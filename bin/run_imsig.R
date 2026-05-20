@@ -4,7 +4,7 @@ args = commandArgs(trailingOnly=TRUE)
 counts_file = args[1]
 
 if (!requireNamespace("imsig", quietly = TRUE)) {
-    install.packages("imsig")
+    install.packages("imsig") }
 library(imsig)
 
 cat("Reading the counts file...\n")
