@@ -18,7 +18,7 @@ process STAR_INDEX {
          --genomeDir star_index \\
          --genomeFastaFiles $fasta \\
          --sjdbGTFfile $gtf \\
-         --runThreadN ${task.cpus}
+         --runThreadN ${task.cpus} \\
          --chimSegmentMin 10 \\
          --chimOutType WithinBAM SoftClip
     """
