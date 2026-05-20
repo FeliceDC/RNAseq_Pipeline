@@ -2,7 +2,7 @@ process IMSIG {
     tag "ImSig Deconvolution"
     label 'process_medium'
 
-    container 'rocker/r-ver:4.3.1'
+    container 'rocker/geospatial:4.3.1'
 
     input:
     path counts_file
