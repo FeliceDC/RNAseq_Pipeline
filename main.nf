@@ -72,6 +72,8 @@ publish:
         immucellai_results    = RNA_SEQ_ANALYSIS.out.immucellai_results
         deconvolution_plots   = RNA_SEQ_ANALYSIS.out.deconvolution_plots
         imsig_results       = RNA_SEQ_ANALYSIS.out.imsig_results
+        arriba_fusions      = RNA_SEQ_ANALYSIS.out.arriba_fusions
+        arriba_discarded    = RNA_SEQ_ANALYSIS.out.arriba_discarded
 
 }
 
@@ -87,4 +89,6 @@ output {
     immucellai_results    { path "deconvolution/immucellai"; mode 'copy' }
     deconvolution_plots   { path "deconvolution/plots"; mode 'copy' }
     imsig_results       { path "deconvolution/imsig"; mode 'copy' }
+    arriba_fusions      { path "fusions/arriba"; mode 'copy' }
+    arriba_discarded    { path "fusions/arriba/discarded"; mode 'copy' }
 }
