@@ -8,6 +8,7 @@ include { ENRICHR } from '../modules/enrichr'
 include { IMMUCELLAI } from '../modules/immucellai'
 include { PLOT_DECONVOLUTION } from '../modules/plot_deconvolution'
 include { IMSIG } from '../modules/imsig'
+include { ARRIBA } from '../modules/arriba'
 
 workflow RNA_SEQ_ANALYSIS {
 log.info "RNA-seq analysis started..."
