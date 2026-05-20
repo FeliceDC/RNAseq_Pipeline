@@ -2,7 +2,7 @@ process IMSIG {
     tag "ImSig Deconvolution"
     label 'process_medium'
 
-    container 'quay.io/biocontainers/r-base:4.3.1'
+    container 'rocker/r-ver:4.3.1'
 
     input:
     path counts_file
