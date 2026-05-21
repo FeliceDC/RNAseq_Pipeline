@@ -28,7 +28,7 @@ process ARRIBA {
         -o ${sample_id}_fusions.tsv \\
         -O ${sample_id}_fusions.discarded.tsv > ${sample_id}.arriba.log 2>&1
 
-
+    samtools index ${bam}
 
     /arriba_v2.4.0/draw_fusions.R \\
         --fusions=${sample_id}_fusions.tsv \\
