@@ -28,5 +28,16 @@ process ARRIBA {
         -p /arriba_v2.4.0/database/protein_domains_hg38_GRCh38_v2.4.0.gff3 \\
         -o ${sample_id}_fusions.tsv \\
         -O ${sample_id}_fusions.discarded.tsv > ${sample_id}.arriba.log 2>&1
+
+
+
+    /arriba_v2.4.0/draw_fusions.R \\
+        --fusions=${sample_id}_fusions.tsv \\
+        --alignments=${bam} \\
+        --annotation=${gtf} \\
+        --cytobands=/arriba_v2.4.0/database/cytobands_hg38_GRCh38_v2.4.0.tsv \\
+        --proteinDomains=/arriba_v2.4.0/database/protein_domains_hg38_GRCh38_v2.4.0.gff3 \\
+        --output=${sample_id}_fusions.pdf || touch ${sample_id}_fusions.pdf
     """
+
 }
