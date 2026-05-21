@@ -57,6 +57,7 @@ emit:
         immucellai_results    = IMMUCELLAI.out.tpm_matrix.mix(IMMUCELLAI.out.fractions)
         deconvolution_plots   = PLOT_DECONVOLUTION.out.plots
         imsig_results       = IMSIG.out.results
+        imsig_plot          = IMSIG.out.plot
         arriba_fusions      = ARRIBA.out.fusions
         arriba_discarded    = ARRIBA.out.discarded
 }
