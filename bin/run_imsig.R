@@ -38,7 +38,6 @@ df_long <- pivot_longer(imsig_perc, cols = -Sample, names_to = "CellType", value
 p <- ggplot(df_long, aes(x = Sample, y = Percentage, fill = CellType)) +
     geom_bar(stat = "identity", position = "fill", color = "black", linewidth = 0.2) +
     
-    # Sfondo formale da paper (bianco totale, assi solidi)
     theme_classic() +
     theme(
         axis.text.x = element_text(angle = 45, hjust = 1, face = "bold", color = "black", size = 11),
@@ -49,7 +48,7 @@ p <- ggplot(df_long, aes(x = Sample, y = Percentage, fill = CellType)) +
         legend.title = element_text(face = "bold")
     ) +
     labs(
-        title = "Composizione Relativa Infiltrato Immunitario",
+        title = "Relative Composition of Immune Infiltrate",
         x = "Samples",
         y = "Relative proportion",
         fill = "Cell type"
