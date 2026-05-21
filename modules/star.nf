@@ -54,6 +54,6 @@ process STAR_ALIGN {
          --chimScoreSeparation 1 \\
          --alignSJstitchMismatchNmax 5 -1 5 5 \\
          --chimSegmentReadGapMax 3 \\
-         --outSAMattributes NH HI AS NM MD SA
+         --outSAMattributes NH HI AS NM MD
     """
 }
