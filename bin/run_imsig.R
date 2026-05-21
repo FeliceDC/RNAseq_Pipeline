@@ -31,21 +31,20 @@ imsig_perc$CellType <- rownames(imsig_perc)
 df_long <- pivot_longer(imsig_perc, cols = -CellType, names_to = "Sample", values_to = "Percentage")
 
 p <- ggplot(df_long, aes(x = Sample, y = Percentage, fill = CellType)) +
-    geom_bar(stat = "identity") +
-    coord_flip() +
-
+    geom_bar(stat = "identity", position = "fill") + 
+    coord_flip() + # Barra orizzontale, perfetta per nomi lunghi SRR
     theme_minimal() +
-    # sull'asse Y sono orizzontali e leggibilissimi di default!
     theme(
-        title = element_text(face = "bold")
+        title = element_text(face = "bold"),
+        legend.position = "right" # Mettiamo la legenda a destra
     ) +
-
     labs(
-        title = "Abbondanza Relativa Cellule Immunitarie (ImSig)",
-        subtitle = "Visualizzazione per singolo campione (Percentuale)",
-        x = "Campioni",
-        y = "Percentuale (%)",
-        fill = "Tipo Cellulare"
-    )
+        title = "Relative Composition of Immune Infiltrate (ImSig)",
+        subtitle = "Visualization of the composition for each sample",
+        x = "Samples", # Etichetta corretta per asse Y (dopo coord_flip)
+        y = "Relative Proportion", # Etichetta corretta per asse X (dopo coord_flip)
+        fill = "Cell type"
+    ) +
+    scale_y_continuous(labels = scales::percent_format())
 
-ggsave("ImSig_plot.pdf", plot = p, width = 10, height = 7)
+ggsave("ImSig_plot.pdf", plot = p, width = 12, height = 8)
