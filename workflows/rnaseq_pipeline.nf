@@ -22,15 +22,13 @@ ch_reads = Channel.fromFilePairs(params.input_reads, checkIfExists: true)
 
 FASTQC(ch_reads)
 TRIMGALORE(ch_reads)
-
 ch_fasta = file(params.fasta)
 ch_gtf   = file(params.gtf)
 STAR_INDEX(ch_fasta, ch_gtf)
-
 STAR_ALIGN(STAR_INDEX.out.index, TRIMGALORE.out.reads)
-
 ch_bams_raccolti = STAR_ALIGN.out.bam.map { it[1] }.collect()
 FEATURECOUNTS(ch_gtf, ch_bams_raccolti)
+ARRIBA(STAR_ALIGN.out.bam, ch_fasta, ch_gtf)
 
     ch_multiqc_files = Channel.empty()
     ch_multiqc_files = ch_multiqc_files.mix(
@@ -38,22 +36,14 @@ FEATURECOUNTS(ch_gtf, ch_bams_raccolti)
         TRIMGALORE.out.log,
         STAR_ALIGN.out.log,
         FEATURECOUNTS.out.summary
+        ARRIBA.out.fusions
     )
-
 MULTIQC( ch_multiqc_files.collect() )
-
 DESEQ2(FEATURECOUNTS.out.counts, file(params.samplesheet))
-
 ENRICHR(DESEQ2.out.results_tables)
-
 IMMUCELLAI(FEATURECOUNTS.out.counts)
-
 PLOT_DECONVOLUTION( IMMUCELLAI.out.fractions )
-
 IMSIG(FEATURECOUNTS.out.counts)
-
-ARRIBA(STAR_ALIGN.out.bam, ch_fasta, ch_gtf)
-
 
 emit:
         fastqc_results        = FASTQC.out.html.mix(FASTQC.out.zip)
