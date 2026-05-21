@@ -32,17 +32,17 @@ df_long <- pivot_longer(imsig_perc, cols = -CellType, names_to = "Sample", value
 
 p <- ggplot(df_long, aes(x = Sample, y = Percentage, fill = CellType)) +
     geom_bar(stat = "identity", position = "fill") + 
-    coord_flip() + # Barra orizzontale, perfetta per nomi lunghi SRR
+    coord_flip() +
     theme_minimal() +
     theme(
         title = element_text(face = "bold"),
-        legend.position = "right" # Mettiamo la legenda a destra
+        legend.position = "right" 
     ) +
     labs(
         title = "Relative Composition of Immune Infiltrate (ImSig)",
         subtitle = "Visualization of the composition for each sample",
-        x = "Samples", # Etichetta corretta per asse Y (dopo coord_flip)
-        y = "Relative Proportion", # Etichetta corretta per asse X (dopo coord_flip)
+        x = "Samples", 
+        y = "Relative Proportion", 
         fill = "Cell type"
     ) +
     scale_y_continuous(labels = scales::percent_format())
