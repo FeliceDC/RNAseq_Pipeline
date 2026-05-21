@@ -21,3 +21,23 @@ imsig_res <- imsig(exp = exp_matrix, r = 0.7)
 
 cat("Saving results...\n")
 write.csv(imsig_res, "ImSig_results.csv", row.names=TRUE)
+
+
+library(ggplot2)
+library(tidyr)
+
+
+imsig_perc <- sweep(imsig_res, 2, colSums(imsig_res), FUN="/") * 100
+imsig_perc$CellType <- rownames(imsig_perc)
+df_long <- pivot_longer(imsig_perc, cols = -CellType, names_to = "Sample", values_to = "Percentage")
+
+
+p <- ggplot(df_long, aes(x = Sample, y = Percentage, fill = CellType)) +
+    geom_bar(stat = "identity") +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    labs(title = "Relative Abundance of Immune Cells (ImSig)",
+         x = "Samples",
+         y = "Percentage (%)",
+         fill = "Cellular Type")
+ggsave("ImSig_plot.pdf", plot = p, width = 10, height = 7)
