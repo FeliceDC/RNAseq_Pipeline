@@ -75,6 +75,7 @@ publish:
         imsig_plot          = RNA_SEQ_ANALYSIS.out.imsig_plot
         arriba_fusions      = RNA_SEQ_ANALYSIS.out.arriba_fusions
         arriba_discarded    = RNA_SEQ_ANALYSIS.out.arriba_discarded
+        arriba_plots        = RNA_SEQ_ANALYSIS.out.arriba_plots
 
 }
 
@@ -93,4 +94,5 @@ output {
     imsig_plot          { path "deconvolution/imsig_results/plot"; mode 'copy'}
     arriba_fusions      { path "fusions/arriba"; mode 'copy' }
     arriba_discarded    { path "fusions/arriba/discarded"; mode 'copy' }
+    arriba_plots        { path "fusions/arriba/plots"; mode 'copy' }
 }
