@@ -30,7 +30,7 @@ process ARRIBA {
 
     samtools index ${bam}
 
-    awk -F'\\t' 'NR==1 || (\$10 + \$11 > 0)' ${sample_id}_fusions.tsv > filtered_plots.tsv
+    awk -F'\\t' 'NR==1 || (\$10 > 0 && \$11 > 0)' ${sample_id}_fusions.tsv > filtered_plots.tsv
 
     /arriba_v2.4.0/draw_fusions.R \\
         --fusions=filtered_plots.tsv \\
