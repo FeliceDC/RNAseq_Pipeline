@@ -23,28 +23,33 @@ cat("Saving results...\n")
 write.csv(imsig_res, "ImSig_results.csv", row.names=TRUE)
 
 
+
 library(ggplot2)
 library(tidyr)
 
-imsig_perc <- sweep(imsig_res, 2, colSums(imsig_res), FUN="/") * 100
-imsig_perc$CellType <- rownames(imsig_perc)
-df_long <- pivot_longer(imsig_perc, cols = -CellType, names_to = "Sample", values_to = "Percentage")
+
+imsig_perc <- sweep(imsig_res, 1, rowSums(imsig_res), FUN="/") * 100
+
+
+imsig_perc$Sample <- rownames(imsig_perc)
+
+df_long <- pivot_longer(imsig_perc, cols = -Sample, names_to = "CellType", values_to = "Percentage")
+
 
 p <- ggplot(df_long, aes(x = Sample, y = Percentage, fill = CellType)) +
-    geom_bar(stat = "identity", position = "fill") + 
-    coord_flip() +
+    geom_bar(stat = "identity", position = "fill") +
     theme_minimal() +
+
     theme(
-        title = element_text(face = "bold"),
-        legend.position = "right" 
+        axis.text.x = element_text(angle = 45, hjust = 1, face = "bold"),
+        title = element_text(face = "bold")
     ) +
     labs(
         title = "Relative Composition of Immune Infiltrate (ImSig)",
-        subtitle = "Visualization of the composition for each sample",
-        x = "Samples", 
-        y = "Relative Proportion", 
+        x = "Samples",
+        y = "Relative Proportion",
         fill = "Cell type"
     ) +
     scale_y_continuous(labels = scales::percent_format())
 
-ggsave("ImSig_plot.pdf", plot = p, width = 12, height = 8)
+ggsave("ImSig_plot.pdf", plot = p, width = 10, height = 7)
