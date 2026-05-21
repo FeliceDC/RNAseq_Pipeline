@@ -35,8 +35,7 @@ ARRIBA(STAR_ALIGN.out.bam, ch_fasta, ch_gtf)
         FASTQC.out.zip,
         TRIMGALORE.out.log,
         STAR_ALIGN.out.log,
-        FEATURECOUNTS.out.summary,
-        ARRIBA.out.log
+        FEATURECOUNTS.out.summary
     )
 MULTIQC( ch_multiqc_files.collect() )
 DESEQ2(FEATURECOUNTS.out.counts, file(params.samplesheet))
@@ -60,4 +59,5 @@ emit:
         imsig_plot          = IMSIG.out.plot
         arriba_fusions      = ARRIBA.out.fusions
         arriba_discarded    = ARRIBA.out.discarded
+        arriba_plots        = ARRIBA.out.plots
 }
