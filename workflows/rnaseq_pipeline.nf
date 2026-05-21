@@ -36,7 +36,7 @@ ARRIBA(STAR_ALIGN.out.bam, ch_fasta, ch_gtf)
         TRIMGALORE.out.log,
         STAR_ALIGN.out.log,
         FEATURECOUNTS.out.summary,
-        ARRIBA.out.fusions
+        ARRIBA.out.log
     )
 MULTIQC( ch_multiqc_files.collect() )
 DESEQ2(FEATURECOUNTS.out.counts, file(params.samplesheet))
