@@ -30,26 +30,31 @@ library(tidyr)
 
 imsig_perc <- sweep(imsig_res, 1, rowSums(imsig_res), FUN="/") * 100
 
-
-imsig_perc$Sample <- rownames(imsig_perc)
+clean_names <- gsub("\\.Aligned\\.sortedByCoord\\.out\\.bam", "", rownames(imsig_perc))
+imsig_perc$Sample <- clean_names
 
 df_long <- pivot_longer(imsig_perc, cols = -Sample, names_to = "CellType", values_to = "Percentage")
 
-
 p <- ggplot(df_long, aes(x = Sample, y = Percentage, fill = CellType)) +
-    geom_bar(stat = "identity", position = "fill") +
-    theme_minimal() +
-
+    geom_bar(stat = "identity", position = "fill", color = "black", linewidth = 0.2) +
+    
+    # Sfondo formale da paper (bianco totale, assi solidi)
+    theme_classic() +
     theme(
-        axis.text.x = element_text(angle = 45, hjust = 1, face = "bold"),
-        title = element_text(face = "bold")
+        axis.text.x = element_text(angle = 45, hjust = 1, face = "bold", color = "black", size = 11),
+        axis.text.y = element_text(color = "black", size = 11),
+        axis.line = element_line(color = "black", linewidth = 0.5),
+        title = element_text(face = "bold", size = 14),
+        legend.text = element_text(size = 10),
+        legend.title = element_text(face = "bold")
     ) +
     labs(
-        title = "Relative Composition of Immune Infiltrate (ImSig)",
+        title = "Composizione Relativa Infiltrato Immunitario",
         x = "Samples",
-        y = "Relative Proportion",
+        y = "Relative proportion",
         fill = "Cell type"
     ) +
-    scale_y_continuous(labels = scales::percent_format())
-
+    scale_y_continuous(labels = scales::percent_format(), expand = c(0, 0)) +
+    
+    scale_fill_brewer(palette = "Paired") 
 ggsave("ImSig_plot.pdf", plot = p, width = 10, height = 7)
