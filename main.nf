@@ -72,6 +72,7 @@ publish:
         immucellai_results    = RNA_SEQ_ANALYSIS.out.immucellai_results
         deconvolution_plots   = RNA_SEQ_ANALYSIS.out.deconvolution_plots
         imsig_results       = RNA_SEQ_ANALYSIS.out.imsig_results
+        imsig_plot          = RNA_SEQ_ANALYSIS.out.imsig_plot
         arriba_fusions      = RNA_SEQ_ANALYSIS.out.arriba_fusions
         arriba_discarded    = RNA_SEQ_ANALYSIS.out.arriba_discarded
 
