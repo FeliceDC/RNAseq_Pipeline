@@ -2,7 +2,7 @@ process ENRICHR {
     tag "Pathway Analysis"
     label 'process_low'
     
-    container 'quay.io/biocontainers/r-base:4.3.1'
+    container 'rocker/geospatial:4.3.1'
     input:
     path deseq2_results
 
