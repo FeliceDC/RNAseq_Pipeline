@@ -89,7 +89,7 @@ output {
     immucellai_results    { path "deconvolution/immucellai_results/immucellai"; mode 'copy' }
     deconvolution_plots   { path "deconvolution/immucellai_results/plots"; mode 'copy' }
     imsig_results       { path "deconvolution/imsig_results/imsig"; mode 'copy' }
-    imsig_plot          { path "deconvolution/imsig_results/plot
+    imsig_plot          { path "deconvolution/imsig_results/plot"; mode 'copy'}
     arriba_fusions      { path "fusions/arriba"; mode 'copy' }
     arriba_discarded    { path "fusions/arriba/discarded"; mode 'copy' }
 }
