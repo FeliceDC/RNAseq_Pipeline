@@ -30,13 +30,15 @@ process ARRIBA {
 
     samtools index ${bam}
 
+    awk -F'\t' 'NR==1 || (\$24 > 0 && \$25 > 0)' ${sample_id}_fusions.tsv > filtered_plots.tsv
+
     /arriba_v2.4.0/draw_fusions.R \\
-        --fusions=${sample_id}_fusions.tsv \\
+        --fusions=filtered_plots.tsv \\
         --alignments=${bam} \\
         --annotation=${gtf} \\
         --cytobands=/arriba_v2.4.0/database/cytobands_hg38_GRCh38_v2.4.0.tsv \\
         --proteinDomains=/arriba_v2.4.0/database/protein_domains_hg38_GRCh38_v2.4.0.gff3 \\
-        --output=${sample_id}_fusions.pdf || touch ${sample_id}_fusions.pdf
+        --output=${sample_id}_fusions.pdf || { echo "No high-confidence fusions found. Creating an empty PDF."; touch ${sample_id}_fusions.pdf
     """
 
 }
