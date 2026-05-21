@@ -35,7 +35,7 @@ ARRIBA(STAR_ALIGN.out.bam, ch_fasta, ch_gtf)
         FASTQC.out.zip,
         TRIMGALORE.out.log,
         STAR_ALIGN.out.log,
-        FEATURECOUNTS.out.summary
+        FEATURECOUNTS.out.summary,
         ARRIBA.out.fusions
     )
 MULTIQC( ch_multiqc_files.collect() )
