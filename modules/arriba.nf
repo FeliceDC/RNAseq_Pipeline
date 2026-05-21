@@ -15,6 +15,7 @@ process ARRIBA {
 
     path "*_fusions.tsv", emit: fusions
     path "*_fusions.discarded.tsv", emit: discarded
+    path "*.arriba.log", emit: log
 
     script:
     """
@@ -26,6 +27,6 @@ process ARRIBA {
         -k /arriba_v2.4.0/database/known_fusions_hg38_GRCh38_v2.4.0.tsv.gz \\
         -p /arriba_v2.4.0/database/protein_domains_hg38_GRCh38_v2.4.0.gff3 \\
         -o ${sample_id}_fusions.tsv \\
-        -O ${sample_id}_fusions.discarded.tsv
+        -O ${sample_id}_fusions.discarded.tsv > ${sample_id}.arriba.log 2>&1
     """
 }
