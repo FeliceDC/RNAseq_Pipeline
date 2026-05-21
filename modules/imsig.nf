@@ -9,6 +9,7 @@ process IMSIG {
 
     output:
     path "ImSig_results.csv", emit: results
+    path "ImSig_plot.pdf"   , emit: plot
 
     script:
     """
