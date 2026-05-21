@@ -15,8 +15,7 @@ process ARRIBA {
 
     path "*_fusions.tsv", emit: fusions
     path "*_fusions.discarded.tsv", emit: discarded
-    path "*.arriba.log", emit: log
-
+    path "*.pdf", emit: plots
     script:
     """
     /arriba_v2.4.0/arriba \\
