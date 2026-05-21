@@ -86,9 +86,10 @@ output {
     multiqc_results       { path "multiqc"; mode 'copy' }
     deseq2_results        { path "deseq2"; mode 'copy' }
     enrichr_results       { path "enrichr"; mode 'copy' }
-    immucellai_results    { path "deconvolution/immucellai"; mode 'copy' }
-    deconvolution_plots   { path "deconvolution/plots"; mode 'copy' }
-    imsig_results       { path "deconvolution/imsig"; mode 'copy' }
+    immucellai_results    { path "deconvolution/immucellai_results/immucellai"; mode 'copy' }
+    deconvolution_plots   { path "deconvolution/immucellai_results/plots"; mode 'copy' }
+    imsig_results       { path "deconvolution/imsig_results/imsig"; mode 'copy' }
+    imsig_plot          { path "deconvolution/imsig_results/plot
     arriba_fusions      { path "fusions/arriba"; mode 'copy' }
     arriba_discarded    { path "fusions/arriba/discarded"; mode 'copy' }
 }
