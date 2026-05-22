@@ -5,8 +5,8 @@ process RMATS {
     container 'quay.io/biocontainers/rmats:4.1.2--py39h6d91be2_2'
 
     input:
-    path bams_cond1
-    path bams_cond2
+    path bams           
+    path samplesheet    
     path gtf
 
     output:
@@ -14,16 +14,35 @@ process RMATS {
 
     script:
     """
-    echo \${bams_cond1.join(',')} > b1.txt
-    echo \${bams_cond2.join(',')} > b2.txt
+    python -c "
+    import csv, os, glob
+    bams = glob.glob('*.bam')
+    groups = {}
+    with open('${samplesheet}', 'r') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            sample = row['sample']
+            cond = row['condition']
+            if cond not in groups:
+                groups[cond] = []
+            for b in bams:
+                if sample in b:
+                    groups[cond].append(os.path.abspath(b))
+    
+    conds = list(groups.keys())
+    with open('b1.txt', 'w') as f1:
+        f1.write(','.join(groups[conds[0]]))
+    with open('b2.txt', 'w') as f2:
+        f2.write(','.join(groups[conds[1]]))
+    "
 
     rmats.py \\
         --b1 b1.txt \\
         --b2 b2.txt \\
-        --gtf \${gtf} \\
+        --gtf ${gtf} \\
         -t paired \\
         --readLength 100 \\
-        --nthread \${task.cpus} \\
+        --nthread ${task.cpus} \\
         --od rmats_out \\
         --tmp rmats_tmp
     """
