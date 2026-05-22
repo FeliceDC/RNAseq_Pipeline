@@ -9,6 +9,7 @@ include { IMMUCELLAI } from '../modules/immucellai'
 include { PLOT_DECONVOLUTION } from '../modules/plot_deconvolution'
 include { IMSIG } from '../modules/imsig'
 include { ARRIBA } from '../modules/arriba'
+include { RMATS } from '../modules/rmats'
 
 workflow RNA_SEQ_ANALYSIS {
 log.info "RNA-seq analysis started..."
@@ -43,6 +44,7 @@ ENRICHR(DESEQ2.out.results_tables)
 IMMUCELLAI(FEATURECOUNTS.out.counts)
 PLOT_DECONVOLUTION( IMMUCELLAI.out.fractions )
 IMSIG(FEATURECOUNTS.out.counts)
+RMATS(ch_bams_raccolti, file(params.samplesheet), ch_gtf)
 
 emit:
         fastqc_results        = FASTQC.out.html.mix(FASTQC.out.zip)
@@ -60,4 +62,5 @@ emit:
         arriba_fusions      = ARRIBA.out.fusions
         arriba_discarded    = ARRIBA.out.discarded
         arriba_plots        = ARRIBA.out.plots
+        rmats_results = RMATS.out.splicing_results
 }
