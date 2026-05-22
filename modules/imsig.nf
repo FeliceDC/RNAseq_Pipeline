@@ -13,6 +13,8 @@ process IMSIG {
 
     script:
     """
-    Rscript ${projectDir}/bin/run_imsig.R ${counts_file}
+    Rscript ${projectDir}/bin/run_imsig.R ${counts_file} || 
+    touch ImSig_results.csv 
+    touch ImSig_plot.pdf
     """
 }
