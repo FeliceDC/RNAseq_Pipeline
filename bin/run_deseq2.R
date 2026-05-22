@@ -12,9 +12,24 @@ meta <- read.csv(metadata_file, row.names = 1, stringsAsFactors = TRUE)
 
 counts <- counts[, 6:ncol(counts)]
 
-colnames(counts) <- gsub("\\.Aligned\\.sortedByCoord\\.out\\.bam$", "", colnames(counts))
-colnames(counts) <- gsub("\\.bam$", "", colnames(counts))
-colnames(counts) <- sub("^X", "", colnames(counts))
+col_names <- colnames(counts)
+col_names <- gsub("\\.Aligned\\.sortedByCoord\\.out\\.bam$", "", col_names)
+col_names <- gsub("\\.bam$", "", col_names)
+col_names <- sub("^X", "", col_names)
+
+true_samples <- rownames(meta)
+
+for (ts in true_samples) {
+    match_idx <- grep(paste0("^", ts), col_names)
+    if (length(match_idx) == 0) {
+        match_idx <- grep(ts, col_names, fixed = TRUE)
+    }
+    if (length(match_idx) == 1) {
+        col_names[match_idx] <- ts
+    }
+}
+
+colnames(counts) <- col_names
 common_samples <- intersect(colnames(counts), rownames(meta))
 
 if (length(common_samples) == 0) {
