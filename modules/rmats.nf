@@ -2,7 +2,7 @@ process RMATS {
     tag "Alternative Splicing"
     label 'process_high'
 
-    container 'quay.io/biocontainers/rmats:4.1.2--py39h6d91be2_2'
+    container 'xinglab/rmats:v4.3.0'
 
     input:
     path bams           
