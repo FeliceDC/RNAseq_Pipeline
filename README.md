@@ -24,18 +24,7 @@ This pipeline can automatically handles datasets with very small genomes (e.g., 
 6. Differential Expression Analysis & Visualization (`DESeq2`)
 
 
-## Quick Start (Test Profile)
-
-Before running the pipeline with your data you can test it on your system without downloading heavy datasets. We have provided a self-contained `test` profile that runs on a minimal Sars-Cov-2 dataset.
-
->[!NOTE]
->```bash
->nextflow run FeliceDC/RNAseq_Pipeline -profile test
->```
-
-If everything works correctly, this process will finish in less than a minute and generate the complete output folders.
-
-## Usage with Real Data
+## Usage
 
 To run the pipeline on your own samples, you need to provide:
 1. Your raw fastq.gz files
