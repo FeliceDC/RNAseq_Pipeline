@@ -42,7 +42,7 @@ process SASHIMI_PLOT {
     rmats2sashimiplot \\
         --b1 b1.txt \\
         --b2 b2.txt \\
-        -t SE \\
+        --event-type SE \\
         -e top5_SE.txt \\
         --l1 Control --l2 Treated \\
         --exon_s 1 --intron_s 5 \\
