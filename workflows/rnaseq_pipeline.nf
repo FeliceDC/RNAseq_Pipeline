@@ -10,7 +10,7 @@ include { PLOT_DECONVOLUTION } from '../modules/plot_deconvolution'
 include { IMSIG } from '../modules/imsig'
 include { ARRIBA } from '../modules/arriba'
 include { RMATS } from '../modules/rmats'
-include { RMATS_PLOT } from '../modules/rmats_plot'
+include { RMATS_PLOT } from '../modules/rmats_plots'
 include { SASHIMI_PLOT } from '../modules/splicing_sashimi_plot'
 
 workflow RNA_SEQ_ANALYSIS {
