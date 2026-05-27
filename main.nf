@@ -77,9 +77,11 @@ publish:
         arriba_discarded    = RNA_SEQ_ANALYSIS.out.arriba_discarded
         arriba_plots        = RNA_SEQ_ANALYSIS.out.arriba_plots
         rmats_results = RNA_SEQ_ANALYSIS.out.rmats_results
-        rmats_plots = RNA_SEQ_ANALYSIS.out.rmats_plots
-        sashimi_plots         = RNA_SEQ_ANALYSIS.out.sashimi_plots
         darts_results = RNA_SEQ_ANALYSIS.out.darts_results
+        rmats_plots           = RNA_SEQ_ANALYSIS.out.rmats_plots
+        darts_plots           = RNA_SEQ_ANALYSIS.out.darts_plots
+        rmats_sashimi         = RNA_SEQ_ANALYSIS.out.rmats_sashimi
+        darts_sashimi         = RNA_SEQ_ANALYSIS.out.darts_sashimi
 
 }
 
@@ -100,7 +102,9 @@ output {
     arriba_discarded    { path "fusions/arriba/discarded"; mode 'copy' }
     arriba_plots        { path "fusions/arriba/plots"; mode 'copy' }
     rmats_results { path "splicing/rmats"; mode 'copy' }
-    rmats_plots { path "splicing/plots"; mode 'copy' }
-    sashimi_plots         { path "splicing/sashimi"; mode 'copy' }
     darts_results { path "splicing/darts_ai"; mode 'copy' }
+    rmats_plots           { path "splicing/rmats/plots"; mode 'copy' }
+    darts_plots           { path "splicing/darts_ai/plots"; mode 'copy' }
+    rmats_sashimi         { path "splicing/rmats/sashimi"; mode 'copy' }
+    darts_sashimi         { path "splicing/darts_ai/sashimi"; mode 'copy' }
 }
