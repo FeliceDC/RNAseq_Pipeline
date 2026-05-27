@@ -78,6 +78,7 @@ publish:
         arriba_plots        = RNA_SEQ_ANALYSIS.out.arriba_plots
         rmats_results = RNA_SEQ_ANALYSIS.out.rmats_results
         rmats_plots = RNA_SEQ_ANALYSIS.out.rmats_plots
+        sashimi_plots         = RNA_SEQ_ANALYSIS.out.sashimi_plots
 
 }
 
@@ -99,4 +100,5 @@ output {
     arriba_plots        { path "fusions/arriba/plots"; mode 'copy' }
     rmats_results { path "splicing/rmats"; mode 'copy' }
     rmats_plots { path "splicing/plots"; mode 'copy' }
+    sashimi_plots         { path "splicing/sashimi"; mode 'copy' }
 }
