@@ -11,6 +11,7 @@ include { IMSIG } from '../modules/imsig'
 include { ARRIBA } from '../modules/arriba'
 include { RMATS } from '../modules/rmats'
 include { RMATS_PLOT } from '../modules/rmats_plot'
+include { SASHIMI_PLOT } from '../modules/splicing_sashimi_plot'
 
 workflow RNA_SEQ_ANALYSIS {
 log.info "RNA-seq analysis started..."
@@ -47,6 +48,7 @@ PLOT_DECONVOLUTION( IMMUCELLAI.out.fractions )
 IMSIG(FEATURECOUNTS.out.counts)
 RMATS(ch_bams_raccolti, file(params.samplesheet), ch_gtf)
 RMATS_PLOT(RMATS.out.splicing_results)
+SASHIMI_PLOT(ch_bams_raccolti, file(params.samplesheet), RMATS.out.splicing_results)
 
 emit:
         fastqc_results        = FASTQC.out.html.mix(FASTQC.out.zip)
@@ -66,4 +68,5 @@ emit:
         arriba_plots        = ARRIBA.out.plots
         rmats_results = RMATS.out.splicing_results
         rmats_plots = RMATS_PLOT.out.plots
+        sashimi_plots = SASHIMI_PLOT.out.plots
 }
