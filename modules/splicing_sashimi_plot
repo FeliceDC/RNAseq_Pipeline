@@ -7,7 +7,7 @@ process SASHIMI_PLOT {
     input:
     path bams
     path samplesheet
-    path rmats_files // Cambiato: ora accetta i file sparsi, senza fare "trenini"
+    path rmats_files 
 
     output:
     path "sashimi_out/Sashimi_plot/*.pdf", emit: plots
