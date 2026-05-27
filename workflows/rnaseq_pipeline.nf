@@ -10,8 +10,10 @@ include { PLOT_DECONVOLUTION } from '../modules/plot_deconvolution'
 include { IMSIG } from '../modules/imsig'
 include { ARRIBA } from '../modules/arriba'
 include { RMATS } from '../modules/rmats'
-include { RMATS_PLOT } from '../modules/rmats_plots'
-include { SASHIMI_PLOT } from '../modules/splicing_sashimi_plot'
+include { SPLICING_PLOT as RMATS_PLOT } from '../modules/splicing_plots'
+include { SPLICING_PLOT as DARTS_PLOT } from '../modules/splicing_plots'
+include { SASHIMI_PLOT as RMATS_SASHIMI } from '../modules/sashimi'
+include { SASHIMI_PLOT as DARTS_SASHIMI } from '../modules/sashimi'
 include { DARTS } from '../modules/darts'
 
 workflow RNA_SEQ_ANALYSIS {
@@ -48,9 +50,11 @@ IMMUCELLAI(FEATURECOUNTS.out.counts)
 PLOT_DECONVOLUTION( IMMUCELLAI.out.fractions )
 IMSIG(FEATURECOUNTS.out.counts)
 RMATS(ch_bams_raccolti, file(params.samplesheet), ch_gtf)
-RMATS_PLOT(RMATS.out.splicing_results)
-SASHIMI_PLOT(ch_bams_raccolti, file(params.samplesheet), RMATS.out.splicing_results)
 DARTS(ch_bams_raccolti, file(params.samplesheet), ch_gtf)
+RMATS_PLOT(RMATS.out.splicing_results, 'rMATS')
+DARTS_PLOT(DARTS.out.splicing_results, 'DARTS_AI')
+RMATS_SASHIMI(ch_bams_raccolti, file(params.samplesheet), RMATS.out.splicing_results)
+DARTS_SASHIMI(ch_bams_raccolti, file(params.samplesheet), DARTS.out.splicing_results)
 
 emit:
         fastqc_results        = FASTQC.out.html.mix(FASTQC.out.zip)
@@ -69,7 +73,9 @@ emit:
         arriba_discarded    = ARRIBA.out.discarded
         arriba_plots        = ARRIBA.out.plots
         rmats_results = RMATS.out.splicing_results
-        rmats_plots = RMATS_PLOT.out.plots
-        sashimi_plots = SASHIMI_PLOT.out.plots
         darts_results = DARTS.out.splicing_results
+        rmats_plots    = RMATS_PLOT.out.plots
+        darts_plots    = DARTS_PLOT.out.plots
+        rmats_sashimi  = RMATS_SASHIMI.out.plots
+        darts_sashimi  = DARTS_SASHIMI.out.plots
 }
