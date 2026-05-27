@@ -12,8 +12,8 @@ include { ARRIBA } from '../modules/arriba'
 include { RMATS } from '../modules/rmats'
 include { SPLICING_PLOTS as RMATS_PLOT } from '../modules/splicing_plots'
 include { SPLICING_PLOTS as DARTS_PLOT } from '../modules/splicing_plots'
-include { SASHIMI_PLOT as RMATS_SASHIMI } from '../modules/sashimi'
-include { SASHIMI_PLOT as DARTS_SASHIMI } from '../modules/sashimi'
+include { SASHIMI_PLOT as RMATS_SASHIMI } from '../modules/splicing_sashimi_plots'
+include { SASHIMI_PLOT as DARTS_SASHIMI } from '../modules/splicing_sashimi_plots'
 include { DARTS } from '../modules/darts'
 
 workflow RNA_SEQ_ANALYSIS {
