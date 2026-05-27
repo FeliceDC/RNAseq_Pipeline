@@ -1,0 +1,49 @@
+process SASHIMI_PLOT {
+    tag "Sashimi Plot"
+    label 'process_medium'
+
+    container 'quay.io/biocontainers/rmats2sashimiplot:2.0.4--pyhdfd78af_1'
+
+    input:
+    path bams
+    path samplesheet
+    path rmats_dir
+
+    output:
+    path "sashimi_out/*.pdf", emit: plots
+
+    script:
+    """
+    python -c "
+    import csv, os, glob
+    bams = glob.glob('*.bam')
+    groups = {}
+    with open('${samplesheet}', 'r') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            sample = row['sample']
+            cond = row['condition']
+            if cond not in groups:
+                groups[cond] = []
+            for b in bams:
+                if sample in b:
+                    groups[cond].append(os.path.abspath(b))
+    
+    conds = list(groups.keys())
+    with open('b1.txt', 'w') as f1:
+        f1.write(','.join(groups[conds[0]]))
+    with open('b2.txt', 'w') as f2:
+        f2.write(','.join(groups[conds[1]]))
+    "
+    head -n 6 ${rmats_dir}/SE.MATS.JC.txt > top5_SE.txt
+
+    rmats2sashimiplot \\
+        --b1 b1.txt \\
+        --b2 b2.txt \\
+        -t SE \\
+        -e top5_SE.txt \\
+        --l1 Control --l2 Treated \\
+        --exon_s 1 --intron_s 5 \\
+        -o sashimi_out
+    """
+}
