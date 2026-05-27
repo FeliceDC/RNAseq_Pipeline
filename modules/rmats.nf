@@ -36,7 +36,7 @@ process RMATS {
         f2.write(','.join(groups[conds[1]]))
     "
 
-    rmats.py \\
+    python /rmats/rmats.py \\
         --b1 b1.txt \\
         --b2 b2.txt \\
         --gtf ${gtf} \\
