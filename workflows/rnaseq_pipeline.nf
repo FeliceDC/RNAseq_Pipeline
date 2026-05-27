@@ -10,6 +10,7 @@ include { PLOT_DECONVOLUTION } from '../modules/plot_deconvolution'
 include { IMSIG } from '../modules/imsig'
 include { ARRIBA } from '../modules/arriba'
 include { RMATS } from '../modules/rmats'
+include { RMATS_PLOT } from '../modules/rmats_plot'
 
 workflow RNA_SEQ_ANALYSIS {
 log.info "RNA-seq analysis started..."
@@ -45,6 +46,7 @@ IMMUCELLAI(FEATURECOUNTS.out.counts)
 PLOT_DECONVOLUTION( IMMUCELLAI.out.fractions )
 IMSIG(FEATURECOUNTS.out.counts)
 RMATS(ch_bams_raccolti, file(params.samplesheet), ch_gtf)
+RMATS_PLOT(RMATS.out.splicing_results)
 
 emit:
         fastqc_results        = FASTQC.out.html.mix(FASTQC.out.zip)
@@ -63,4 +65,5 @@ emit:
         arriba_discarded    = ARRIBA.out.discarded
         arriba_plots        = ARRIBA.out.plots
         rmats_results = RMATS.out.splicing_results
+        rmats_plots = RMATS_PLOT.out.plots
 }
