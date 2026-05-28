@@ -22,6 +22,9 @@ This pipeline can automatically handles datasets with very small genomes (e.g., 
 4. Gene-level quantification (`featureCounts`)
 5. Pipeline QC report (`MultiQC`)
 6. Differential Expression Analysis & Visualization (`DESeq2`)
+7. Deconvolution
+8. Alternative splicing
+9. Fusions
 
 
 ## Usage
