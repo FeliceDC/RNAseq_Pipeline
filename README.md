@@ -64,6 +64,7 @@ Now you should be ready to run the pipeline.
 | `--skip_fusions` | Salta l'analisi delle fusioni geniche (Arriba) |
 | `--skip_deconvolution` | Salta la stima dell'infiltrazione cellulare |
 | `--skip_differential` | Salta l'analisi differenziale (DESeq2/EnrichR) |
+| `--skip_splicing` | Salta l'analisi dello splicing alternativo (RMats/Darts) |
 | `--g` | Questo parametro riguarda l'esecuzione di Feature Count. La pipeline è impostata di default ad usare `gene_id` ma puoi invece specificare `gene_name` |
 | `--strandedness` | La pipeline è impostata di default per utilizzare strandedness 0, ma puoi selezionare a piacere tra 0, 1 e 2 |
 | `--outdir` | Puoi specificare una cartella diversa in cui verranno salvati i risultati |
