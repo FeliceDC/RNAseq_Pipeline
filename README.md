@@ -9,11 +9,9 @@
 </p>
 
 ## Introduction
-**FeliceDC/RNAseq_Pipeline** is a bioinformatics analysis pipeline used for RNA sequencing data. Developed in Nextflow, it automates the entire workflow from raw FASTQ reads to Differential Expression analysis, ensuring reproducibility and scalability.
+**FeliceDC/RNAseq_Pipeline** is a comprehensive, modular bioinformatics analysis pipeline used for RNA sequencing data. Developed in Nextflow (DSL2), it automates the entire workflow from raw FASTQ reads to advanced downstream analysis (Differential Expression, Splicing, Fusions, and Deconvolution), ensuring reproducibility and scalability.
 
 The pipeline is built using Docker containers, meaning you don't need to install any bioinformatics tools manually.
-
-This pipeline can automatically handles datasets with very small genomes (e.g., viral genomes or targeted panels) by bypassing standard dispersion curves in DESeq2, preventing crashes common in other public workflows.
 
 ## Pipeline Summary
 1. Raw read QC (`FastQC`)
@@ -21,10 +19,10 @@ This pipeline can automatically handles datasets with very small genomes (e.g., 
 3. Read alignment and indexing (`STAR`)
 4. Gene-level quantification (`featureCounts`)
 5. Pipeline QC report (`MultiQC`)
-6. Differential Expression Analysis & Visualization (`DESeq2`)
-7. Deconvolution
-8. Alternative splicing (`Rmats_turbo, Darts`)
-10. Fusions (`Arriba`)
+6. Differential Expression Analysis (`DESeq2`), followed by pathway enrichment (`EnrichR`)
+7. Tumor Deconvolution: Immune and stromal cell infiltration estimation ((`ImmuCellAI`) and (`ImSig`)).
+8. Alternative Splicing: Classical statistical splicing analysis (`rMATS`) compared with Bayesian Deep Learning predictions (`DARTS`), complete with automated Volcano, Bar, and Sashimi plots.
+9. Gene Fusions: Structural variant detection (`Arriba`)
 
 
 ## Usage
@@ -33,7 +31,9 @@ To run the pipeline on your own samples, you need to provide:
 1. Your raw fastq.gz files
 2. A reference genome
 3. An annotation file
-4. A design matrix (named "samplesheet"). The samplesheet must be a comma-separated values file (.csv). The first column (called "sample") must match the FASTQ file names (excluding the _1.fastq.gz suffix).The second column should contain the variable you want to use for differential analysis. Optionally, you can perform differential analysis using two variables if needed.
+4. A design matrix (named "samplesheet").
+
+The samplesheet must be a comma-separated values file (.csv). The first column (called "sample") must match the FASTQ file names (excluding the _1.fastq.gz suffix).The second column should contain the variable you want to use for differential analysis. Optionally, you can perform differential analysis using two variables if needed.
 Example:
 
 **samplesheet.csv**
@@ -51,13 +51,24 @@ Now you should be ready to run the pipeline.
 >[!NOTE]
 >An example running code is
 >```bash
->nextflow run Filic03/RNAseq_Pipeline --input_reads "/apps/Felice/GSE/prova_per_nextflow/*_{1,2}.fastq.gz" --fasta "/apps/Felice/GSE/nuovo_genoma/GRCh38.primary_assembly.genome.fa" --gtf "/apps/Felice/GSE/nuovo_genoma/gencode.v49.primary_assembly.annotation.gtf" --design "condition" --samplesheet "./samplesheet.csv" --max_cpus 20
+>nextflow run Filic03/RNAseq_Pipeline --input_reads "/Your/Files/Path/*fastq.gz" --fasta "/Your/Genome/Path/GRCh38.primary_assembly.genome.fa" --gtf "/Your/Path/gencode.v49.primary_assembly.annotation.gtf" --design "condition" --samplesheet "/Your/File/Path/samplesheet.csv"
 >```
 >
 >If you want, you can run Deseq2 with two variables. Then you have to write --design "variable1 + variable2"
 >```bash
->nextflow run Filic03/RNAseq_Pipeline --input_reads "/apps/Felice/GSE/prova_per_nextflow/*_{1,2}.fastq.gz" --fasta "/apps/Felice/GSE/nuovo_genoma/GRCh38.primary_assembly.genome.fa" --gtf "/apps/Felice/GSE/nuovo_genoma/gencode.v49.primary_assembly.annotation.gtf" --design "condition + age" --samplesheet "./samplesheet.csv" --max_cpus 12
+>nextflow run Filic03/RNAseq_Pipeline --input_reads "/Your/Files/Path/*fastq.gz" --fasta "/Your/Genome/Path/GRCh38.primary_assembly.genome.fa" --gtf "/Your/Path/gencode.v49.primary_assembly.annotation.gtf" --design "condition + age" --samplesheet "/Your/File/Path/samplesheet.csv"
 >```
+
+<label for="configuration">Parameters:</label>
+<select id="configuration" name="configuration">
+
+    <optgroup label="Optional parameters">
+        <option value="--skip_fusions">Salta Fusioni (Arriba)</option>
+        <option value="--skip_deconvolution">Salta Deconvoluzione</option>
+        <option value="--skip_differential">Salta Analisi Differenziale</option>
+    </optgroup>
+
+</select>
 
 >[!WARNING]
 >Running the pipeline on full human datasets requires significant computational resources. It is highly recommended to check your machine and specify an appropriate --max_cpus limit.
