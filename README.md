@@ -23,8 +23,8 @@ This pipeline can automatically handles datasets with very small genomes (e.g., 
 5. Pipeline QC report (`MultiQC`)
 6. Differential Expression Analysis & Visualization (`DESeq2`)
 7. Deconvolution
-8. Alternative splicing
-9. Fusions
+8. Alternative splicing (`Rmats_turbo, Darts`)
+10. Fusions (`Arriba`)
 
 
 ## Usage
