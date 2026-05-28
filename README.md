@@ -64,6 +64,13 @@ Now you should be ready to run the pipeline.
 | `--skip_fusions` | Salta l'analisi delle fusioni geniche (Arriba) |
 | `--skip_deconvolution` | Salta la stima dell'infiltrazione cellulare |
 | `--skip_differential` | Salta l'analisi differenziale (DESeq2/EnrichR) |
+| `--g` | Questo parametro riguarda l'esecuzione di Feature Count. La pipeline è impostata di default ad usare `gene_id` ma puoi invece specificare `gene_name` |
+| `--strandedness` | La pipeline è impostata di default per utilizzare strandedness 0, ma puoi selezionare a piacere tra 0, 1 e 2 |
+| `--outdir` | Puoi specificare una cartella diversa in cui verranno salvati i risultati |
+| `--max_cpus` | Puoi selezionare il numero massimo di cpu da impiegare. Il valore di default è impostato a 16 |
+| `--skip_differential` | Puoi selezionare la quantità di ram da impiegare. Il valore di default è impostato a 64 GB |
+| `--skip_differential` | Puoi selezionare la quantità massima di tempo da dedicare all'analisi. Il valore di default è impostato a 24 h |
+
 
 </select>
 
