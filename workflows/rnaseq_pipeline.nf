@@ -34,7 +34,74 @@ STAR_INDEX(ch_fasta, ch_gtf)
 STAR_ALIGN(STAR_INDEX.out.index, TRIMGALORE.out.reads)
 ch_bams_raccolti = STAR_ALIGN.out.bam.map { it[1] }.collect()
 FEATURECOUNTS(ch_gtf, ch_bams_raccolti)
-ARRIBA(STAR_ALIGN.out.bam, ch_fasta, ch_gtf)
+
+    // Fusions
+    ch_arriba_fusions      = Channel.empty()
+    ch_arriba_discarded    = Channel.empty()
+    ch_arriba_plots        = Channel.empty()
+    
+    // Differential analysis
+    ch_deseq2_results      = Channel.empty()
+    ch_enrichr_results     = Channel.empty()
+    
+    // Deconvolution
+    ch_immucellai_results  = Channel.empty()
+    ch_deconvolution_plots = Channel.empty()
+    ch_imsig_results       = Channel.empty()
+    ch_imsig_plot          = Channel.empty()
+    
+    // Splicing
+    ch_rmats_results       = Channel.empty()
+    ch_darts_results       = Channel.empty()
+    ch_rmats_plots         = Channel.empty()
+    ch_darts_plots         = Channel.empty()
+    ch_rmats_sashimi       = Channel.empty()
+    ch_darts_sashimi       = Channel.empty()
+
+
+    if (!params.skip_fusions) {
+        ARRIBA(STAR_ALIGN.out.bam, ch_fasta, ch_gtf)
+        ch_arriba_fusions   = ARRIBA.out.fusions
+        ch_arriba_discarded = ARRIBA.out.discarded
+        ch_arriba_plots     = ARRIBA.out.plots
+    }
+
+    if (!params.skip_differential) {
+        DESEQ2(FEATURECOUNTS.out.counts, file(params.samplesheet))
+        ENRICHR(DESEQ2.out.results_tables)
+        
+        ch_deseq2_results  = DESEQ2.out.results_tables.mix(DESEQ2.out.results_pdf)
+        ch_enrichr_results = ENRICHR.out.enrichr_results
+    }
+
+    if (!params.skip_deconvolution) {
+        IMMUCELLAI(FEATURECOUNTS.out.counts)
+        PLOT_DECONVOLUTION(IMMUCELLAI.out.fractions)
+        IMSIG(FEATURECOUNTS.out.counts)
+        
+        ch_immucellai_results  = IMMUCELLAI.out.tpm_matrix.mix(IMMUCELLAI.out.fractions)
+        ch_deconvolution_plots = PLOT_DECONVOLUTION.out.plots
+        ch_imsig_results       = IMSIG.out.results
+        ch_imsig_plot          = IMSIG.out.plot
+    }
+
+    if (!params.skip_splicing) {
+        RMATS(ch_bams_raccolti, file(params.samplesheet), ch_gtf)
+        DARTS(ch_bams_raccolti, file(params.samplesheet), ch_gtf)
+        
+        RMATS_PLOT(RMATS.out.splicing_results, 'rMATS')
+        DARTS_PLOT(DARTS.out.splicing_results, 'DARTS_AI')
+        
+        RMATS_SASHIMI(ch_bams_raccolti, file(params.samplesheet), RMATS.out.splicing_results)
+        DARTS_SASHIMI(ch_bams_raccolti, file(params.samplesheet), DARTS.out.splicing_results)
+        
+        ch_rmats_results = RMATS.out.splicing_results
+        ch_darts_results = DARTS.out.splicing_results
+        ch_rmats_plots   = RMATS_PLOT.out.plots
+        ch_darts_plots   = DARTS_PLOT.out.plots
+        ch_rmats_sashimi = RMATS_SASHIMI.out.plots
+        ch_darts_sashimi = DARTS_SASHIMI.out.plots
+    }
 
     ch_multiqc_files = Channel.empty()
     ch_multiqc_files = ch_multiqc_files.mix(
@@ -43,39 +110,32 @@ ARRIBA(STAR_ALIGN.out.bam, ch_fasta, ch_gtf)
         STAR_ALIGN.out.log,
         FEATURECOUNTS.out.summary
     )
-MULTIQC( ch_multiqc_files.collect() )
-DESEQ2(FEATURECOUNTS.out.counts, file(params.samplesheet))
-ENRICHR(DESEQ2.out.results_tables)
-IMMUCELLAI(FEATURECOUNTS.out.counts)
-PLOT_DECONVOLUTION( IMMUCELLAI.out.fractions )
-IMSIG(FEATURECOUNTS.out.counts)
-RMATS(ch_bams_raccolti, file(params.samplesheet), ch_gtf)
-DARTS(ch_bams_raccolti, file(params.samplesheet), ch_gtf)
-RMATS_PLOT(RMATS.out.splicing_results, 'rMATS')
-DARTS_PLOT(DARTS.out.splicing_results, 'DARTS_AI')
-RMATS_SASHIMI(ch_bams_raccolti, file(params.samplesheet), RMATS.out.splicing_results)
-DARTS_SASHIMI(ch_bams_raccolti, file(params.samplesheet), DARTS.out.splicing_results)
+    MULTIQC( ch_multiqc_files.collect() )
 
-emit:
+    emit:
         fastqc_results        = FASTQC.out.html.mix(FASTQC.out.zip)
         trimgalore_results    = TRIMGALORE.out.reads.mix(TRIMGALORE.out.log)
         star_index_results    = STAR_INDEX.out.index
         star_align_results    = STAR_ALIGN.out.bam.mix(STAR_ALIGN.out.log)
         featurecounts_results = FEATURECOUNTS.out.counts.mix(FEATURECOUNTS.out.summary)
         multiqc_results       = MULTIQC.out.report.mix(MULTIQC.out.data)
-        deseq2_results        = DESEQ2.out.results_tables.mix(DESEQ2.out.results_pdf)
-        enrichr_results       = ENRICHR.out.enrichr_results
-        immucellai_results    = IMMUCELLAI.out.tpm_matrix.mix(IMMUCELLAI.out.fractions)
-        deconvolution_plots   = PLOT_DECONVOLUTION.out.plots
-        imsig_results       = IMSIG.out.results
-        imsig_plot          = IMSIG.out.plot
-        arriba_fusions      = ARRIBA.out.fusions
-        arriba_discarded    = ARRIBA.out.discarded
-        arriba_plots        = ARRIBA.out.plots
-        rmats_results = RMATS.out.splicing_results
-        darts_results = DARTS.out.splicing_results
-        rmats_plots    = RMATS_PLOT.out.plots
-        darts_plots    = DARTS_PLOT.out.plots
-        rmats_sashimi  = RMATS_SASHIMI.out.plots
-        darts_sashimi  = DARTS_SASHIMI.out.plots
+        
+        arriba_fusions        = ch_arriba_fusions
+        arriba_discarded      = ch_arriba_discarded
+        arriba_plots          = ch_arriba_plots
+        
+        deseq2_results        = ch_deseq2_results
+        enrichr_results       = ch_enrichr_results
+        
+        immucellai_results    = ch_immucellai_results
+        deconvolution_plots   = ch_deconvolution_plots
+        imsig_results         = ch_imsig_results
+        imsig_plot            = ch_imsig_plot
+        
+        rmats_results         = ch_rmats_results
+        darts_results         = ch_darts_results
+        rmats_plots           = ch_rmats_plots
+        darts_plots           = ch_darts_plots
+        rmats_sashimi         = ch_rmats_sashimi
+        darts_sashimi         = ch_darts_sashimi
 }
