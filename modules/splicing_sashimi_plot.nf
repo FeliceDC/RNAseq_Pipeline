@@ -10,7 +10,7 @@ process SASHIMI_PLOT {
     path rmats_files 
 
     output:
-    path "sashimi_out/Sashimi_plot/*.pdf", emit: plots
+    path "sashimi_out/Sashimi_plot/*.pdf", emit: plots, optional: true
 
     script:
     """
