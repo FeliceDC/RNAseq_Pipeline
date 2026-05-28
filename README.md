@@ -65,12 +65,16 @@ Now you should be ready to run the pipeline.
 | `--skip_deconvolution` | Salta la stima dell'infiltrazione cellulare |
 | `--skip_differential` | Salta l'analisi differenziale (DESeq2/EnrichR) |
 | `--skip_splicing` | Salta l'analisi dello splicing alternativo (RMats/Darts) |
-| `--g` | Questo parametro riguarda l'esecuzione di Feature Count. La pipeline è impostata di default ad usare `gene_id` ma puoi invece specificare `gene_name` |
+| `--g gene_name` | Questo parametro riguarda l'esecuzione di Feature Count. La pipeline è impostata di default ad usare `gene_id``. Se invece si desidera ottenere questo tipo di output, aggiungere questo parametro |
 | `--strandedness` | La pipeline è impostata di default per utilizzare strandedness 0, ma puoi selezionare a piacere tra 0, 1 e 2 |
+| `--single_end true` |  La pipeline è impostata per gestire autonomamente dati del tipo PAIRED END. Se invece si stanno usando dati del tipo SINGLE END aggiungere questo parametro |
+| `--enrichr_database` | Spericificare i database supportati da enrichr da voler utilizzare |
 | `--outdir` | Puoi specificare una cartella diversa in cui verranno salvati i risultati |
 | `--max_cpus` | Puoi selezionare il numero massimo di cpu da impiegare. Il valore di default è impostato a 16 |
 | `--max_memory` | Puoi selezionare la quantità di ram da impiegare. Il valore di default è impostato a 64 GB |
 | `--max_time` | Puoi selezionare la quantità massima di tempo da dedicare all'analisi. Il valore di default è impostato a 24 h |
+
+
 
 
 </select>
