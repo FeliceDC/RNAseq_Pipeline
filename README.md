@@ -59,9 +59,6 @@ Now you should be ready to run the pipeline.
 >nextflow run Filic03/RNAseq_Pipeline --input_reads "/Your/Files/Path/*fastq.gz" --fasta "/Your/Genome/Path/GRCh38.primary_assembly.genome.fa" --gtf "/Your/Path/gencode.v49.primary_assembly.annotation.gtf" --design "condition + age" --samplesheet "/Your/File/Path/samplesheet.csv"
 >```
 
-<label for="configuration">Parameters:</label>
-<select id="configuration" name="configuration">
-
  | Parametro | Descrizione |
 | :--- | :--- |
 | `--skip_fusions` | Salta l'analisi delle fusioni geniche (Arriba) |
