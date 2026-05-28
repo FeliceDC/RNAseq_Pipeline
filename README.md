@@ -91,7 +91,12 @@ By default, the pipeline creates a results/ directory containing the following s
 
 - featurecounts/: Raw count matrices.
 
-- deseq2/: CSV tables with statistically significant Differentially Expressed Genes (DEGs) and related plots (MA plot, PCA, Volcano plot, Heatmap ecc.).
+- deseq2/: CSV tables with statistically significant Differentially Expressed Genes (DEGs) and related plots (MA plot, PCA, Volcano plot, Heatmap).
 
+- enrichr/: Pathway enrichment tables and bar plots.
 
+- splicing/: Separated results for rmats/ and darts_ai/, including raw tables, .pdf summary plots, and genomic Sashimi plots.
 
+- fusions/: Arriba fusion tables and circular/linear .pdf visualizations.
+
+- deconvolution/: Infiltration abundance matrices and comparative plots from ImmuCellAI and ImSig.
