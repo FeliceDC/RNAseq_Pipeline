@@ -62,11 +62,11 @@ Now you should be ready to run the pipeline.
 <label for="configuration">Parameters:</label>
 <select id="configuration" name="configuration">
 
-    <optgroup label="Optional parameters">
-        <option value="--skip_fusions">Salta Fusioni (Arriba)</option>
-        <option value="--skip_deconvolution">Salta Deconvoluzione</option>
-        <option value="--skip_differential">Salta Analisi Differenziale</option>
-    </optgroup>
+ | Parametro | Descrizione |
+| :--- | :--- |
+| `--skip_fusions` | Salta l'analisi delle fusioni geniche (Arriba) |
+| `--skip_deconvolution` | Salta la stima dell'infiltrazione cellulare |
+| `--skip_differential` | Salta l'analisi differenziale (DESeq2/EnrichR) |
 
 </select>
 
