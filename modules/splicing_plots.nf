@@ -9,7 +9,7 @@ process SPLICING_PLOTS {
     val label // Riceve 'rMATS' o 'DARTS_AI'
 
     output:
-    path "*.pdf", emit: plots
+    path "sashimi_out/Sashimi_plot/*.pdf", emit: plots, optional: true
 
     script:
     """
