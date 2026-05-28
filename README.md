@@ -68,8 +68,8 @@ Now you should be ready to run the pipeline.
 | `--strandedness` | La pipeline è impostata di default per utilizzare strandedness 0, ma puoi selezionare a piacere tra 0, 1 e 2 |
 | `--outdir` | Puoi specificare una cartella diversa in cui verranno salvati i risultati |
 | `--max_cpus` | Puoi selezionare il numero massimo di cpu da impiegare. Il valore di default è impostato a 16 |
-| `--skip_differential` | Puoi selezionare la quantità di ram da impiegare. Il valore di default è impostato a 64 GB |
-| `--skip_differential` | Puoi selezionare la quantità massima di tempo da dedicare all'analisi. Il valore di default è impostato a 24 h |
+| `--max_memory` | Puoi selezionare la quantità di ram da impiegare. Il valore di default è impostato a 64 GB |
+| `--max_time` | Puoi selezionare la quantità massima di tempo da dedicare all'analisi. Il valore di default è impostato a 24 h |
 
 
 </select>
