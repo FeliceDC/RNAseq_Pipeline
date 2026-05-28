@@ -22,7 +22,7 @@ process RMATS {
         reader = csv.DictReader(f)
         for row in reader:
             sample = row['sample']
-            cond = row['${params.condition}']
+            cond = row['${params.design}']
             if cond not in groups:
                 groups[cond] = []
             for b in bams:
