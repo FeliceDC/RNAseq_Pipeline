@@ -120,22 +120,22 @@ FEATURECOUNTS(ch_gtf, ch_bams_raccolti)
         featurecounts_results = FEATURECOUNTS.out.counts.mix(FEATURECOUNTS.out.summary)
         multiqc_results       = MULTIQC.out.report.mix(MULTIQC.out.data)
         
-        arriba_fusions        = ch_arriba_fusions
-        arriba_discarded      = ch_arriba_discarded
-        arriba_plots          = ch_arriba_plots
+        arriba_fusions        = ch_arriba_fusions.flatten()
+        arriba_discarded      = ch_arriba_discarded.flatten()
+        arriba_plots          = ch_arriba_plots.flatten()
         
-        deseq2_results        = ch_deseq2_results
-        enrichr_results       = ch_enrichr_results
+        deseq2_results        = ch_deseq2_results.flatten()
+        enrichr_results       = ch_enrichr_results.flatten()
         
-        immucellai_results    = ch_immucellai_results
-        deconvolution_plots   = ch_deconvolution_plots
-        imsig_results         = ch_imsig_results
-        imsig_plot            = ch_imsig_plot
+        immucellai_results    = ch_immucellai_results.flatten()
+        deconvolution_plots   = ch_deconvolution_plots.flatten()
+        imsig_results         = ch_imsig_results.flatten()
+        imsig_plot            = ch_imsig_plot.flatten()
         
-        rmats_results         = ch_rmats_results
-        darts_results         = ch_darts_results
-        rmats_plots           = ch_rmats_plots
-        darts_plots           = ch_darts_plots
-        rmats_sashimi         = ch_rmats_sashimi
-        darts_sashimi         = ch_darts_sashimi
+        rmats_results         = ch_rmats_results.flatten()
+        darts_results         = ch_darts_results.flatten()
+        rmats_plots           = ch_rmats_plots.flatten()
+        darts_plots           = ch_darts_plots.flatten()
+        rmats_sashimi         = ch_rmats_sashimi.flatten()
+        darts_sashimi         = ch_darts_sashimi.flatten()
 }
