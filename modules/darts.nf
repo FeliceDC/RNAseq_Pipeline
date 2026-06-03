@@ -42,7 +42,7 @@ process DARTS {
         --b2 b2.txt \\
         --gtf ${gtf} \\
         -t paired \\
-        --readLength 100 \\
+        --readLength ${params.splicing_read_length} \ \\
         --nthread ${task.cpus} \\
         --od darts_out \\
         --tmp darts_tmp \\
