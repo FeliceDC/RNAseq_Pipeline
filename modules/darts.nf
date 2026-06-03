@@ -41,7 +41,7 @@ process DARTS {
         --b1 b1.txt \\
         --b2 b2.txt \\
         --gtf ${gtf} \\
-        -t paired \\
+        -t ${params.single_end ? 'single' : 'paired'} \ \\
         --readLength ${params.splicing_read_length} \ \\
         --nthread ${task.cpus} \\
         --od darts_out \\
