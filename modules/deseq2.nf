@@ -14,6 +14,6 @@ process DESEQ2 {
 
     script:
     """
-    Rscript ${projectDir}/bin/run_deseq2.R $counts $samplesheet "${params.design}"
+    Rscript \${projectDir}/bin/run_deseq2.R $counts $samplesheet "${params.design}" ${params.pvalue} ${params.logfc}
     """
 }
