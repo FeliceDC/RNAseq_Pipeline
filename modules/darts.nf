@@ -27,8 +27,7 @@ process DARTS {
             if cond not in groups:
                 groups[cond] = []
             for b in bams:
-                if sample in b:
-                    groups[cond].append(os.path.abspath(b))
+                if b.startswith(sample + "."):
     
     conds = list(groups.keys())
     with open('b1.txt', 'w') as f1:
