@@ -13,9 +13,9 @@ meta <- read.csv(metadata_file, row.names = 1, stringsAsFactors = TRUE)
 counts <- counts[, 6:ncol(counts)]
 
 col_names <- colnames(counts)
-col_names <- gsub("\\.Aligned\\.sortedByCoord\\.out\\.bam$", "", col_names)
-col_names <- gsub("\\.bam$", "", col_names)
+
 col_names <- sub("^X", "", col_names)
+col_names <- sub("\\..*", "", col_names)
 
 true_samples <- rownames(meta)
 
