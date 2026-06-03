@@ -79,7 +79,7 @@ res <- results(dds)
 write.table(as.data.frame(res), file="deseq2_results.txt", sep="\t", quote=FALSE, row.names=FALSE)
 
 res_clean <- res[!is.na(res$padj), ]
-res_filt <- res_clean[res_clean$padj < 0.05 & abs(res_clean$log2FoldChange) > 1.5, ]
+res_filt <- res_clean[res_clean$padj < user_pvalue & abs(res_clean$log2FoldChange) > user_logfc, ]
 
 res_filt_df <- as.data.frame(res_filt)
 res_filt_df$Gene_Name <- rownames(res_filt_df)
