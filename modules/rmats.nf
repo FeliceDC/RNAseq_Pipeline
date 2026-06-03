@@ -41,7 +41,7 @@ process RMATS {
         --b2 b2.txt \\
         --gtf ${gtf} \\
         -t paired \\
-        --readLength 100 \\
+       --readLength ${params.splicing_read_length} \ \\
         --nthread ${task.cpus} \\
         --od rmats_out \\
         --tmp rmats_tmp
