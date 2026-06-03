@@ -3,6 +3,8 @@ args <- commandArgs(trailingOnly = TRUE)
 counts_file <- args [1]
 metadata_file <-args [2]
 user_design <-args[3]
+user_pvalue <- as.numeric(args[4])
+user_logfc  <- as.numeric(args[5])
 
 library(DESeq2)
 library(ggplot2)
