@@ -26,7 +26,7 @@ with open('${samplesheet}', 'r') as f:
         if cond not in groups:
             groups[cond] = []
         for b in bams:
-            if b.startswith(sample + '.'):
+            if b.startswith(sample) and not b[len(sample):len(sample)+1].isdigit():
                 groups[cond].append(os.path.abspath(b))
 
 conds = list(groups.keys())
