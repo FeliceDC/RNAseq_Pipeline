@@ -86,6 +86,7 @@ publish:
 }
 
 output {
+    directory params.outdir
     fastqc_results        { path "fastqc"; mode 'copy' }
     trimgalore_results    { path "trimgalore"; mode 'copy' }
     star_index_results    { path "star/index"; mode 'copy' }
