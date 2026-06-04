@@ -86,26 +86,26 @@ publish:
 }
 
 output {
-    directory params.outdir
-    fastqc_results        { path "fastqc"; mode 'copy' }
-    trimgalore_results    { path "trimgalore"; mode 'copy' }
-    star_index_results    { path "star/index"; mode 'copy' }
-    star_align_results    { path "star/alignment"; mode 'copy' }
-    featurecounts_results { path "featureCounts"; mode 'copy' }
-    multiqc_results       { path "multiqc"; mode 'copy' }
-    deseq2_results        { path "deseq2"; mode 'copy' }
-    enrichr_results       { path "enrichr"; mode 'copy' }
-    immucellai_results    { path "deconvolution/immucellai_results/immucellai"; mode 'copy' }
-    deconvolution_plots   { path "deconvolution/immucellai_results/plots"; mode 'copy' }
-    imsig_results       { path "deconvolution/imsig_results/imsig"; mode 'copy' }
-    imsig_plot          { path "deconvolution/imsig_results/plot"; mode 'copy'}
-    arriba_fusions      { path "fusions/arriba"; mode 'copy' }
-    arriba_discarded    { path "fusions/arriba/discarded"; mode 'copy' }
-    arriba_plots        { path "fusions/arriba/plots"; mode 'copy' }
-    rmats_results { path "splicing/rmats"; mode 'copy' }
-    darts_results { path "splicing/darts_ai"; mode 'copy' }
-    rmats_plots           { path "splicing/rmats/plots"; mode 'copy' }
-    darts_plots           { path "splicing/darts_ai/plots"; mode 'copy' }
-    rmats_sashimi         { path "splicing/rmats/sashimi"; mode 'copy' }
-    darts_sashimi         { path "splicing/darts_ai/sashimi"; mode 'copy' }
+    
+    fastqc_results        { path "${params.outdir}/FastQC"; mode 'copy' }
+    trimgalore_results    { path "${params.outdir}/TrimGalore"; mode 'copy' }
+    star_index_results    { path "${params.outdir}/STAR/Index"; mode 'copy' }
+    star_align_results    { path "${params.outdir}/STAR/Alignment"; mode 'copy' }
+    featurecounts_results { path "${params.outdir}/featureCounts"; mode 'copy' }
+    multiqc_results       { path "${params.outdir}/MultiQC"; mode 'copy' }
+    deseq2_results        { path "${params.outdir}/DESeq2"; mode 'copy' }
+    enrichr_results       { path "${params.outdir}/Enrichr"; mode 'copy' }
+    immucellai_results    { path "${params.outdir}/Deconvolution/ImmucellAI_results/ImmucellAI"; mode 'copy' }
+    deconvolution_plots   { path "${params.outdir}/Deconvolution/ImmucellAI_results/Plots"; mode 'copy' }
+    imsig_results         { path "${params.outdir}/Deconvolution/ImsSg_results/ImSig"; mode 'copy' }
+    imsig_plot            { path "${params.outdir}/Deconvolution/ImSig_results/plot"; mode 'copy'}
+    arriba_fusions        { path "${params.outdir}/Fusions/Arriba"; mode 'copy' }
+    arriba_discarded      { path "${params.outdir}/Fusions/Arriba/Discarded"; mode 'copy' }
+    arriba_plots          { path "${params.outdir}/Fusions/Arriba/Plots"; mode 'copy' }
+    rmats_results         { path "${params.outdir}/Splicing/rMATS-turbo"; mode 'copy' }
+    darts_results         { path "${params.outdir}/Splicing/DARTS"; mode 'copy' }
+    rmats_plots           { path "${params.outdir}/Splicing/rMATS/Plots"; mode 'copy' }
+    darts_plots           { path "${params.outdir}/Splicing/DARTS/Plots"; mode 'copy' }
+    rmats_sashimi         { path "${params.outdir}/Splicing/rMATS/Sashimi"; mode 'copy' }
+    darts_sashimi         { path "${params.outdir}/Splicing/DARTS/Sashimi"; mode 'copy' }
 }
