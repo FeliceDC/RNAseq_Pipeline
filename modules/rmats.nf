@@ -15,25 +15,26 @@ process RMATS {
     script:
     """
     python -c "
-    import csv, os, glob
-    bams = glob.glob('*.bam')
-    groups = {}
-    with open('${samplesheet}', 'r') as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            sample = row['sample']
-            cond = row['${params.design}']
-            if cond not in groups:
-                groups[cond] = []
-            for b in bams:
-                if b.startswith(sample + "."):
-    
-    conds = list(groups.keys())
-    with open('b1.txt', 'w') as f1:
-        f1.write(','.join(groups[conds[0]]))
-    with open('b2.txt', 'w') as f2:
-        f2.write(','.join(groups[conds[1]]))
-    "
+import csv, os, glob
+bams = glob.glob('*.bam')
+groups = {}
+with open('${samplesheet}', 'r') as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+        sample = row['sample']
+        cond = row['${params.design}']
+        if cond not in groups:
+            groups[cond] = []
+        for b in bams:
+            if b.startswith(sample + '.'):
+                groups[cond].append(os.path.abspath(b))
+
+conds = list(groups.keys())
+with open('b1.txt', 'w') as f1:
+    f1.write(','.join(groups[conds[0]]))
+with open('b2.txt', 'w') as f2:
+    f2.write(','.join(groups[conds[1]]))
+"
 
     python /rmats/rmats.py \\
         --b1 b1.txt \\
