@@ -10,7 +10,7 @@ process SASHIMI_PLOT {
     path rmats_files 
 
     output:
-    path "sashimi_out/Sashimi_plot/*.pdf", emit: plots
+    path "sashimi_out/Sashimi_plot/*.pdf", emit: plots, optional: true
 
     script:
     """
@@ -20,14 +20,14 @@ process SASHIMI_PLOT {
     bams = glob.glob('*.bam')
     groups = {}
     with open('${samplesheet}', 'r') as f:
-        reader = csv.DictReader(f)
+        reader = csv.DictReader(f, skipinitialspace=True)
         for row in reader:
             sample = row['sample']
             cond = row['${params.design}']
             if cond not in groups:
                 groups[cond] = []
             for b in bams:
-                if sample in b:
+                if b.startswith(sample) and not b[len(sample):len(sample)+1].isdigit():
                     groups[cond].append(os.path.abspath(b))
     
     conds = list(groups.keys())
