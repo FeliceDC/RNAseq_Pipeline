@@ -19,7 +19,7 @@ import csv, os, glob
 bams = glob.glob('*.bam')
 groups = {}
 with open('${samplesheet}', 'r') as f:
-    reader = csv.DictReader(f)
+    reader = csv.DictReader(f, skipinitialspace=True)
     for row in reader:
         sample = row['sample']
         cond = row['${params.design}']
