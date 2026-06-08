@@ -41,7 +41,8 @@ with open('b2.txt', 'w') as f2:
         --b2 b2.txt \\
         --gtf ${gtf} \\
         -t ${params.single_end ? 'single' : 'paired'} \\
-       --readLength ${params.splicing_read_length} \\
+        --readLength ${params.splicing_read_length} \\
+        --variable-read-length \\
         --nthread ${task.cpus} \\
         --od rmats_out \\
         --tmp rmats_tmp
