@@ -9,6 +9,7 @@ process PLOT_DECONVOLUTION {
 
     output:
     path "*.pdf", emit: plots
+    path "*_mqc.png", emit: multiqc_png, optional: true
 
     script:
     """
