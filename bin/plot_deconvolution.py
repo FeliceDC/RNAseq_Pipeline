@@ -47,6 +47,7 @@ plt.xlabel("Samples", fontsize=12, fontweight='bold')
 plt.xticks(rotation=45, ha='right')
 plt.tight_layout()
 plt.savefig("TME_Stacked_Barplot.pdf", dpi=300, bbox_inches='tight')
+plt.savefig("Stacked_Barplot_mqc.png", dpi=300, bbox_inches='tight')
 plt.close()
 
 #PLOT 2
