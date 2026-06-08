@@ -11,6 +11,7 @@ process DESEQ2 {
     output:
     path "*.{csv,txt}", emit: results_tables
     path "*.pdf", emit: results_pdf
+    path "*_mqc.png", emit: multiqc_png, optional: true
 
     script:
     """
