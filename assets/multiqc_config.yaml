@@ -1,1 +1,114 @@
+report_comment: "Report generato dalla pipeline RNA-seq automatizzata. Analisi integrata di qualità, allineamento, espressione differenziale, deconvoluzione e splicing."
+title: "RNA-seq Analysis Report"
 
+# ==============================================================================
+# 1. ORDINE DEI MODULI PRINCIPALI
+# ==============================================================================
+module_order:
+  - fastqc:
+      name: "FastQC (Raw Reads)"
+      info: "Controllo qualità iniziale delle sequenze."
+  - cutadapt:
+      name: "Trim Galore"
+      info: "Rimozione degli adattatori e filtraggio per qualità."
+  - star:
+      name: "STAR Alignment"
+      info: "Tassi di allineamento sul genoma di riferimento."
+  - featurecounts:
+      name: "featureCounts"
+      info: "Quantificazione delle read sui geni."
+      anchor: "module_featurecounts"
+  - custom_content:
+      name: "Analisi a Valle (Downstream)"
+      anchor: "module_custom"
+
+# ==============================================================================
+# 2. ORDINE DELLE SEZIONI CUSTOM (IL METODO NF-CORE)
+# ==============================================================================
+# Diciamo a MultiQC in che ordine esatto mostrare le nostre immagini e tabelle
+report_section_order:
+  deseq2_summary:
+    before: module_custom
+  deseq2_pca:
+    before: deseq2_summary
+  deseq2_volcano:
+    before: deseq2_pca
+  enrichr_plots:
+    before: deseq2_volcano
+  imsig_abundance:
+    before: enrichr_plots
+  imsig_plot:
+    before: imsig_abundance
+  immucellai_abundance:
+    before: imsig_plot
+  immucellai_plot:
+    before: immucellai_abundance
+  sashimi_plots:
+    before: immucellai_plot
+  arriba_fusions:
+    before: sashimi_plots
+
+# ==============================================================================
+# 3. IMPOSTAZIONI GRAFICI E TABELLE CUSTOM
+# ==============================================================================
+custom_data:
+  deseq2_summary:
+    section_name: "DESeq2: Espressione Differenziale"
+    description: "Numero di geni up-regolati e down-regolati."
+    plot_type: "bargraph"
+  deseq2_pca:
+    section_name: "DESeq2: PCA Plot"
+    plot_type: "image"
+  deseq2_volcano:
+    section_name: "DESeq2: Volcano Plot"
+    plot_type: "image"
+  enrichr_plots:
+    section_name: "EnrichR: Pathway Analysis"
+    description: "Top pathway arricchiti (GO, KEGG, ecc.)."
+    plot_type: "image"
+  imsig_abundance:
+    section_name: "ImSig: Dati Deconvoluzione"
+    description: "Abbondanza relativa calcolata da ImSig."
+    plot_type: "bargraph"
+  imsig_plot:
+    section_name: "ImSig: Plot Composizione"
+    plot_type: "image"
+  immucellai_abundance:
+    section_name: "ImmuCellAI: Dati Frazioni"
+    description: "Frazioni stimate per i tipi cellulari del TME."
+    plot_type: "bargraph"
+  immucellai_plot:
+    section_name: "ImmuCellAI: Plot Deconvoluzione"
+    plot_type: "image"
+  sashimi_plots:
+    section_name: "Alternative Splicing: Sashimi Plots"
+    description: "Eventi di splicing differenziale rilevati."
+    plot_type: "image"
+  arriba_fusions:
+    section_name: "Arriba: Fusioni Geniche"
+    description: "Rappresentazione dei trascritti chimerici (se presenti)."
+    plot_type: "image"
+
+# ==============================================================================
+# 4. PATTERN DI RICERCA DEI FILE (Il "Gancio" con i tuoi script)
+# ==============================================================================
+sp:
+  deseq2_summary: {fn: "deseq2_summary_mqc.txt"}
+  deseq2_pca: {fn: "deseq2_pca_mqc.png"}
+  deseq2_volcano: {fn: "deseq2_volcano_mqc.png"}
+  enrichr_plots: {fn: "Barplot_*_mqc.png"}
+  imsig_abundance: {fn: "imsig_abundance_mqc.txt"}
+  imsig_plot: {fn: "imsig_plot_mqc.png"}
+  immucellai_abundance: {fn: "immucellai_abundance_mqc.txt"}
+  immucellai_plot: {fn: "*deconvolution*_mqc.png"}
+  sashimi_plots: {fn: "*_sashimi_mqc.png"}
+  arriba_fusions: {fn: "*_arriba_mqc.png"}
+
+# ==============================================================================
+# 5. RIMOZIONE ESTENSIONI (Pulizia dei titoli)
+# ==============================================================================
+extra_fn_clean_exts:
+  - "_mqc"
+  - "_sashimi"
+  - "_arriba"
+  - "Barplot_"
