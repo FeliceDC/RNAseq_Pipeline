@@ -53,6 +53,10 @@ for (db in dbs) {
         pdf(file=file.path(opt$outdir, paste0("Barplot_", db, ".pdf")), width=10, height=6)
         print(plotEnrich(enriched[[db]], showTerms = 15, numChar = 50, y = "Count", orderBy = "P.value", title = db))
         dev.off()
+
+      png(file=file.path(opt$outdir, paste0("Barplot_", db, "_mqc.png")), width=1200, height=800, res=150)
+      print(plotEnrich(enriched[[db]], showTerms = 15, numChar = 50, y = "Count", orderBy = "P.value", title = db))
+      dev.off()
     }
 }
 cat("Pathways analysis completed succesfully\n")
