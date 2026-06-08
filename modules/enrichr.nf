@@ -8,6 +8,7 @@ process ENRICHR {
 
     output:
     path "*.{csv,pdf}", emit: enrichr_results
+    path "*_mqc.png", emit: multiqc_png, optional: true
 
     script:
     """
