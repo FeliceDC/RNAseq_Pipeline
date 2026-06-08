@@ -42,7 +42,6 @@ process ARRIBA {
         --output=${sample_id}_fusions.pdf || { echo "No high-confidence fusions found. Creating an empty PDF."; touch ${sample_id}_fusions.pdf; }
 
     if [ -s ${sample_id}_fusions.pdf ]; then
-        # pdftoppm scatta la "foto" alla prima pagina del PDF a 300 dpi
         pdftoppm -png -f 1 -l 1 -singlefile -r 300 ${sample_id}_fusions.pdf ${sample_id}_arriba_mqc || echo "PNG conversion failed"
     fi
 
