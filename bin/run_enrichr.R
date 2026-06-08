@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 if (!requireNamespace("enrichR", quietly = TRUE)) {
-    install.packages("enrichR", repos="http://cran.us.r-project.org")
+    install.packages(c("enrichR", "optparse"), repos="https://cloud.r-project.org")
 }
 
 if (!requireNamespace("optparse", quietly = TRUE)) {
