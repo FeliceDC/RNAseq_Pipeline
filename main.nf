@@ -97,8 +97,8 @@ output {
     enrichr_results       { path "${params.outdir}/Enrichr"; mode 'copy' }
     immucellai_results    { path "${params.outdir}/Deconvolution/ImmucellAI_results/ImmucellAI"; mode 'copy' }
     deconvolution_plots   { path "${params.outdir}/Deconvolution/ImmucellAI_results/Plots"; mode 'copy' }
-    imsig_results         { path "${params.outdir}/Deconvolution/ImsSg_results/ImSig"; mode 'copy' }
-    imsig_plot            { path "${params.outdir}/Deconvolution/ImSig_results/plot"; mode 'copy'}
+    imsig_results         { path "${params.outdir}/Deconvolution/ImSig_results/ImSig"; mode 'copy' }
+    imsig_plot            { path "${params.outdir}/Deconvolution/ImSig_results/Plot"; mode 'copy'}
     arriba_fusions        { path "${params.outdir}/Fusions/Arriba"; mode 'copy' }
     arriba_discarded      { path "${params.outdir}/Fusions/Arriba/Discarded"; mode 'copy' }
     arriba_plots          { path "${params.outdir}/Fusions/Arriba/Plots"; mode 'copy' }
