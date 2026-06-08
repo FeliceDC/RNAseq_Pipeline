@@ -122,6 +122,7 @@ pca_plot <- plotPCA(vsd, intgroup=pca_groups) + theme_minimal() + geom_point(siz
   )
 
 print(pca_plot)
+ggsave("deseq2_pca_mqc.png", plot = pca_plot, width = 8, height = 6, dpi = 300)
 
 #Volcano Plot
 max_fc <- max(abs(res$log2FoldChange), na.rm=TRUE)
@@ -130,6 +131,13 @@ with(res, plot(log2FoldChange, -log10(padj), pch=20, main="3. Volcano Plot", col
 with(subset(res, padj < user_pvalue & abs(log2FoldChange) > user_logfc), points(log2FoldChange, -log10(padj), pch=20, col="red"))
 abline(v=c(-user_logfc, user_logfc), col="blue", lty=2)
 abline(h=-log10(user_pvalue), col="blue", lty=2)
+
+png("deseq2_volcano_mqc.png", width = 1200, height = 900, res = 150)
+with(res, plot(log2FoldChange, -log10(padj), pch=20, main="Volcano Plot", col="darkgrey", xlim=c(-limite_x, limite_x)))
+with(subset(res, padj < user_pvalue & abs(log2FoldChange) > user_logfc), points(log2FoldChange, -log10(padj), pch=20, col="red"))
+abline(v=c(-user_logfc, user_logfc), col="blue", lty=2)
+abline(h=-log10(user_pvalue), col="blue", lty=2)
+dev.off()
 
 #Heatmap
 top_genes <- head(order(res$padj), 50)
