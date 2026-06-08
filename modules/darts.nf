@@ -43,6 +43,7 @@ with open('b2.txt', 'w') as f2:
         --gtf ${gtf} \\
         -t ${params.single_end ? 'single' : 'paired'} \\
         --readLength ${params.splicing_read_length} \\
+        --variable-read-length \\
         --nthread ${task.cpus} \\
         --od darts_out \\
         --tmp darts_tmp \\
