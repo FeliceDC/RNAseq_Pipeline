@@ -103,14 +103,24 @@ FEATURECOUNTS(ch_gtf, ch_bams_raccolti)
         ch_darts_sashimi = DARTS_SASHIMI.out.plots
     }
 
+    ch_multiqc_config = Channel.fromPath("${projectDir}/multiqc_config.yaml")
+
     ch_multiqc_files = Channel.empty()
     ch_multiqc_files = ch_multiqc_files.mix(
         FASTQC.out.zip,
         TRIMGALORE.out.log,
         STAR_ALIGN.out.log,
-        FEATURECOUNTS.out.summary
+        FEATURECOUNTS.out.summary,
+        DESEQ2.out.multiqc_png,
+        ENRICHR.out.multiqc_png,
+        ARRIBA.out.multiqc_png,
+        IMSIG.out.multiqc_png,
+        PLOT_DECONVOLUTION.out.multiqc_png,
+        RMATS_SASHIMI.out.multiqc_png,
+        DARTS_SASHIMI.out.multiqc_png
     )
-    MULTIQC( ch_multiqc_files.collect() )
+
+    MULTIQC( ch_multiqc_files.collect(), ch_multiqc_config )
 
     emit:
         fastqc_results        = FASTQC.out.html.mix(FASTQC.out.zip)
