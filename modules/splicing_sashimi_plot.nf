@@ -11,6 +11,7 @@ process SASHIMI_PLOT {
 
     output:
     path "sashimi_out/Sashimi_plot/*.pdf", emit: plots, optional: true
+    path "sashimi_out/Sashimi_plot/*_mqc.png", emit: multiqc_png, optional: true
 
     script:
     """
@@ -47,5 +48,15 @@ process SASHIMI_PLOT {
         --l1 Control --l2 Treated \\
         --exon_s 1 --intron_s 5 \\
         -o sashimi_out
+
+    if [ -d "sashimi_out/Sashimi_plot" ]; then
+        for pdf in sashimi_out/Sashimi_plot/*.pdf; do
+            if [ -f "\$pdf" ]; then
+                base=\$(basename "\$pdf" .pdf)
+                pdftoppm -png -singlefile -r 300 "\$pdf" "sashimi_out/Sashimi_plot/\${base}_sashimi_mqc" || echo "Conversion failed \$pdf"
+            fi
+        done
+     fi
+
     """
 }
