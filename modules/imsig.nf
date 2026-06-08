@@ -10,6 +10,7 @@ process IMSIG {
     output:
     path "ImSig_results.csv", emit: results
     path "ImSig_plot.pdf"   , emit: plot
+    path "*_mqc.png", emit: multiqc_png, optional: true
 
     script:
     """
