@@ -10,6 +10,7 @@ process IMMUCELLAI {
     output:
     path "tpm_matrix.txt"           , emit: tpm_matrix
     path "ImmuCellAI2_results.xlsx"  , emit: fractions
+    path "*_mqc.png", emit: multiqc_png, optional: true
 
     script:
     """
