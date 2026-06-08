@@ -16,6 +16,7 @@ process ARRIBA {
     path "*_fusions.tsv", emit: fusions
     path "*_fusions.discarded.tsv", emit: discarded
     path "*.pdf", emit: plots
+    path "*_mqc.png", emit: multiqc_png, optional: true
     script:
     """
     /arriba_v2.4.0/arriba \\
@@ -39,6 +40,12 @@ process ARRIBA {
         --cytobands=/arriba_v2.4.0/database/cytobands_hg38_GRCh38_v2.4.0.tsv \\
         --proteinDomains=/arriba_v2.4.0/database/protein_domains_hg38_GRCh38_v2.4.0.gff3 \\
         --output=${sample_id}_fusions.pdf || { echo "No high-confidence fusions found. Creating an empty PDF."; touch ${sample_id}_fusions.pdf; }
+
+    if [ -s ${sample_id}_fusions.pdf ]; then
+        # pdftoppm scatta la "foto" alla prima pagina del PDF a 300 dpi
+        pdftoppm -png -f 1 -l 1 -singlefile -r 300 ${sample_id}_fusions.pdf ${sample_id}_arriba_mqc || echo "PNG conversion failed"
+    fi
+
     """
 
 }
