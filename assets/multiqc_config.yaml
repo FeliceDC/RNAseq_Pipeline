@@ -1,60 +1,65 @@
-report_comment: "Report generato dalla pipeline RNA-seq automatizzata. Analisi integrata di qualità, allineamento, espressione differenziale, deconvoluzione e splicing."
+report_comment: "Automated RNA-seq pipeline report. Integrated analysis of Quality Control, Alignment, Differential Expression, TME Deconvolution, and Alternative Splicing."
 title: "RNA-seq Analysis Report"
 
 # ==============================================================================
-# 1. ORDINE DEI MODULI PRINCIPALI
+# 1. MAIN MODULE ORDER
 # ==============================================================================
 module_order:
   - fastqc:
       name: "FastQC (Raw Reads)"
-      info: "Controllo qualità iniziale delle sequenze."
+      info: "Initial quality control of sequencing reads."
   - cutadapt:
       name: "Trim Galore"
-      info: "Rimozione degli adattatori e filtraggio per qualità."
+      info: "Adapter trimming and quality filtering."
   - star:
       name: "STAR Alignment"
-      info: "Tassi di allineamento sul genoma di riferimento."
+      info: "Alignment rates to the reference genome."
   - featurecounts:
       name: "featureCounts"
-      info: "Quantificazione delle read sui geni."
+      info: "Gene-level read quantification."
       anchor: "module_featurecounts"
   - custom_content:
-      name: "Analisi a Valle (Downstream)"
+      name: "Downstream Analysis"
       anchor: "module_custom"
 
 # ==============================================================================
-# 2. ORDINE DELLE SEZIONI CUSTOM (IL METODO NF-CORE)
+# 2. CUSTOM SECTION ORDER
 # ==============================================================================
-# Diciamo a MultiQC in che ordine esatto mostrare le nostre immagini e tabelle
 report_section_order:
-  deseq2_summary:
+  darts_volcano:
     before: module_custom
-  deseq2_pca:
-    before: deseq2_summary
-  deseq2_volcano:
-    before: deseq2_pca
-  enrichr_plots:
-    before: deseq2_volcano
-  imsig_abundance:
-    before: enrichr_plots
-  imsig_plot:
-    before: imsig_abundance
-  immucellai_abundance:
-    before: imsig_plot
+  darts_summary:
+    before: darts_volcano
+  rmats_volcano:
+    before: darts_summary
+  rmats_summary:
+    before: rmats_volcano
+  arriba_fusions:
+    before: rmats_summary
   immucellai_plot:
-    before: immucellai_abundance
-  sashimi_plots:
+    before: arriba_fusions
+  immucellai_abundance:
     before: immucellai_plot
-  arriba_counts:
-    before: sashimi_plots
+  imsig_plot:
+    before: immucellai_abundance
+  imsig_abundance:
+    before: imsig_plot
+  enrichr_plots:
+    before: imsig_abundance
+  deseq2_volcano:
+    before: enrichr_plots
+  deseq2_pca:
+    before: deseq2_volcano
+  deseq2_summary:
+    before: deseq2_pca
 
 # ==============================================================================
-# 3. IMPOSTAZIONI GRAFICI E TABELLE CUSTOM
+# 3. CUSTOM DATA SETTINGS
 # ==============================================================================
 custom_data:
   deseq2_summary:
-    section_name: "DESeq2: Espressione Differenziale"
-    description: "Numero di geni up-regolati e down-regolati."
+    section_name: "DESeq2: Differential Expression"
+    description: "Number of up-regulated and down-regulated genes."
     plot_type: "bargraph"
   deseq2_pca:
     section_name: "DESeq2: PCA Plot"
@@ -64,56 +69,59 @@ custom_data:
     plot_type: "image"
   enrichr_plots:
     section_name: "EnrichR: Pathway Analysis"
-    description: "Top pathway arricchiti (GO, KEGG, ecc.)."
+    description: "Top enriched pathways (GO, KEGG, Reactome, etc.)."
     plot_type: "image"
   imsig_abundance:
-    section_name: "ImSig: Dati Deconvoluzione"
-    description: "Abbondanza relativa calcolata da ImSig."
+    section_name: "ImSig: Deconvolution Data"
+    description: "Relative immune infiltrate abundance calculated by ImSig."
     plot_type: "bargraph"
   imsig_plot:
-    section_name: "ImSig: Plot Composizione"
+    section_name: "ImSig: Composition Plot"
     plot_type: "image"
   immucellai_abundance:
-    section_name: "ImmuCellAI: Dati Frazioni"
-    description: "Frazioni stimate per i tipi cellulari del TME."
+    section_name: "ImmuCellAI: Fractions Data"
+    description: "Estimated fractions for Tumor Microenvironment (TME) cell types."
     plot_type: "bargraph"
   immucellai_plot:
-    section_name: "ImmuCellAI: Plot Deconvoluzione"
+    section_name: "ImmuCellAI: Deconvolution Plot"
     plot_type: "image"
-  sashimi_plots:
-    section_name: "Alternative Splicing: Sashimi Plots"
-    description: "Eventi di splicing differenziale rilevati."
+  rmats_summary:
+    section_name: "rMATS: Event Summary"
+    description: "Number of significant alternative splicing events."
     plot_type: "image"
-  arriba_counts:
-    section_name: "Arriba: Fusioni Geniche"
-    description: "Numero totale di fusioni ad alta confidenza identificate per ogni campione."
-    plot_type: "bargraph"
-    pconfig:
-      id: "arriba_fusions_barplot"
-      title: "Fusions per Sample"
-      ylab: "Number of Fusions"
-      color: "#4daf4a"
+  rmats_volcano:
+    section_name: "rMATS: Volcano Plot"
+    plot_type: "image"
+  darts_summary:
+    section_name: "DARTS: Event Summary"
+    description: "Number of significant AI-predicted alternative splicing events."
+    plot_type: "image"
+  darts_volcano:
+    section_name: "DARTS: Volcano Plot"
+    plot_type: "image"
 
 # ==============================================================================
-# 4. PATTERN DI RICERCA DEI FILE (Il "Gancio" con i tuoi script)
+# 4. SEARCH PATTERNS
 # ==============================================================================
 sp:
   deseq2_summary: {fn: "deseq2_summary_mqc.txt"}
-  deseq2_pca: {fn: "deseq2_pca_mqc.png"}
-  deseq2_volcano: {fn: "deseq2_volcano_mqc.png"}
+  deseq2_pca: {fn: "*pca_mqc.png"}
+  deseq2_volcano: {fn: "*volcano_mqc.png"}
   enrichr_plots: {fn: "Barplot_*_mqc.png"}
   imsig_abundance: {fn: "imsig_abundance_mqc.txt"}
-  imsig_plot: {fn: "imsig_plot_mqc.png"}
+  imsig_plot: {fn: "*imsig*_mqc.png"}
   immucellai_abundance: {fn: "immucellai_abundance_mqc.txt"}
   immucellai_plot: {fn: "*deconvolution*_mqc.png"}
-  sashimi_plots: {fn: "*_sashimi_mqc.png"}
-  arriba_counts: {fn: "*_arriba_counts_mqc.txt"}
+  rmats_summary: {fn: "*rMATS_Summary_BarChart_mqc.png"}
+  rmats_volcano: {fn: "*rMATS_Volcano_SE_mqc.png"}
+  darts_summary: {fn: "*DARTS_AI_Summary_BarChart_mqc.png"}
+  darts_volcano: {fn: "*DARTS_AI_Volcano_SE_mqc.png"}
 
 # ==============================================================================
-# 5. RIMOZIONE ESTENSIONI (Pulizia dei titoli)
+# 5. STRING CLEANUP
 # ==============================================================================
 extra_fn_clean_exts:
   - "_mqc"
-  - "_sashimi"
-  - "_arriba"
   - "Barplot_"
+  - "rMATS_"
+  - "DARTS_AI_"
