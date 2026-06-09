@@ -104,8 +104,8 @@ output {
     arriba_plots          { path "${params.outdir}/Fusions/Arriba/Plots"; mode 'copy' }
     rmats_results         { path "${params.outdir}/Splicing/rMATS-turbo"; mode 'copy' }
     darts_results         { path "${params.outdir}/Splicing/DARTS"; mode 'copy' }
-    rmats_plots           { path "${params.outdir}/Splicing/rMATS/Plots"; mode 'copy' }
+    rmats_plots           { path "${params.outdir}/Splicing/rMATS-turbo/Plots"; mode 'copy' }
     darts_plots           { path "${params.outdir}/Splicing/DARTS/Plots"; mode 'copy' }
-    rmats_sashimi         { path "${params.outdir}/Splicing/rMATS/Sashimi"; mode 'copy' }
-    darts_sashimi         { path "${params.outdir}/Splicing/DARTS/Sashimi"; mode 'copy' }
+    rmats_sashimi         { path "${params.outdir}/Splicing/rMATS-turbo/Plots/Sashimi"; mode 'copy' }
+    darts_sashimi         { path "${params.outdir}/Splicing/DARTS/Plots/Sashimi"; mode 'copy' }
 }
