@@ -47,6 +47,7 @@ process ARRIBA {
     echo "# plot_type: 'bargraph'" >> ${sample_id}_arriba_mqc.txt
     echo "# pconfig:" >> ${sample_id}_arriba_mqc.txt
     echo "#    ylab: 'Number of Fusions'" >> ${sample_id}_arriba_mqc.txt
+    echo "#    cpswitch: False" >> ${sample_id}_arriba_mqc.txt
     printf "%s\t%s\n" "${sample_id}" "\${FUSIONS_COUNT}" >> ${sample_id}_arriba_mqc.txt
     """
 
