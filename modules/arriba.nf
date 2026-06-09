@@ -16,7 +16,7 @@ process ARRIBA {
     path "*_fusions.tsv", emit: fusions
     path "*_fusions.discarded.tsv", emit: discarded
     path "*.pdf", emit: plots
-    path "*_arriba_counts_mqc.txt", emit: multiqc_counts
+   path "*_arriba_mqc.txt", emit: multiqc_counts
     script:
     """
     /arriba_v2.4.0/arriba \\
@@ -42,8 +42,12 @@ process ARRIBA {
         --output=${sample_id}_fusions.pdf || { echo "No high-confidence fusions found. Creating an empty PDF."; touch ${sample_id}_fusions.pdf; }
 
     FUSIONS_COUNT=\$(tail -n +2 ${sample_id}_fusions.tsv | wc -l)
-    printf "Sample\tFusions\n" > ${sample_id}_arriba_counts_mqc.txt
-    printf "%s\t%s\n" "${sample_id}" "\${FUSIONS_COUNT}" >> ${sample_id}_arriba_counts_mqc.txt
+    echo "# id: 'arriba_fusions'" > ${sample_id}_arriba_mqc.txt
+    echo "# section_name: 'Arriba: Fusioni Geniche'" >> ${sample_id}_arriba_mqc.txt
+    echo "# plot_type: 'bargraph'" >> ${sample_id}_arriba_mqc.txt
+    echo "# pconfig:" >> ${sample_id}_arriba_mqc.txt
+    echo "#    ylab: 'Number of Fusions'" >> ${sample_id}_arriba_mqc.txt
+    printf "%s\t%s\n" "${sample_id}" "\${FUSIONS_COUNT}" >> ${sample_id}_arriba_mqc.txt
     """
 
 }
