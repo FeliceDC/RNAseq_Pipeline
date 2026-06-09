@@ -117,9 +117,7 @@ FEATURECOUNTS(ch_gtf, ch_bams_raccolti)
         IMSIG.out.multiqc_png,
         PLOT_DECONVOLUTION.out.multiqc_png,
         RMATS_PLOT.out.multiqc_png,
-        DARTS_PLOT.out.multiqc_png,
-        RMATS_SASHIMI.out.multiqc_png,
-        DARTS_SASHIMI.out.multiqc_png
+        DARTS_PLOT.out.multiqc_png
     )
 
     MULTIQC( ch_multiqc_files.collect(), ch_multiqc_config )
