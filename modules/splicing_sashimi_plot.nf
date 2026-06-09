@@ -2,13 +2,15 @@ process SASHIMI_PLOT {
     tag "Sashimi Plot"
     label 'process_medium'
     container 'xinglab/rmats2sashimiplot:v3.0.0'
+
     input:
     path bams
     path samplesheet
     path rmats_files 
+
     output:
     path "sashimi_out/Sashimi_plot/*.pdf", emit: plots, optional: true
-    path "sashimi_out/Sashimi_plot/*_mqc.png", emit: multiqc_png, optional: true
+
     script:
     """
     python -c "
