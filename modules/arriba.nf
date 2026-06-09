@@ -42,7 +42,8 @@ process ARRIBA {
         --output=${sample_id}_fusions.pdf || { echo "No high-confidence fusions found. Creating an empty PDF."; touch ${sample_id}_fusions.pdf; }
 
     FUSIONS_COUNT=\$(tail -n +2 ${sample_id}_fusions.tsv | wc -l)
-    printf "%s\t%s\n" "${sample_id}" "\${FUSIONS_COUNT}" > ${sample_id}_arriba_counts_mqc.txt
+    printf "Sample\tFusions\n" > ${sample_id}_arriba_counts_mqc.txt
+    printf "%s\t%s\n" "${sample_id}" "\${FUSIONS_COUNT}" >> ${sample_id}_arriba_counts_mqc.txt
     """
 
 }
