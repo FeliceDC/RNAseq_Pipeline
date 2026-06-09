@@ -16,7 +16,7 @@ process ARRIBA {
     path "*_fusions.tsv", emit: fusions
     path "*_fusions.discarded.tsv", emit: discarded
     path "*.pdf", emit: plots
-    path "*_mqc.png", emit: multiqc_png, optional: true
+    path "*_arriba_counts_mqc.txt", emit: multiqc_counts
     script:
     """
     /arriba_v2.4.0/arriba \\
@@ -41,10 +41,8 @@ process ARRIBA {
         --proteinDomains=/arriba_v2.4.0/database/protein_domains_hg38_GRCh38_v2.4.0.gff3 \\
         --output=${sample_id}_fusions.pdf || { echo "No high-confidence fusions found. Creating an empty PDF."; touch ${sample_id}_fusions.pdf; }
 
-    if [ -s ${sample_id}_fusions.pdf ]; then
-        pdftoppm -png -f 1 -l 1 -singlefile -r 300 ${sample_id}_fusions.pdf ${sample_id}_arriba_mqc || echo "PNG conversion failed"
-    fi
-
+    FUSIONS_COUNT=\$(tail -n +2 ${sample_id}_fusions.tsv | wc -l)
+    printf "%s\t%s\n" "${sample_id}" "\${FUSIONS_COUNT}" > ${sample_id}_arriba_counts_mqc.txt
     """
 
 }
