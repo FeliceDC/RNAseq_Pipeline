@@ -113,7 +113,7 @@ FEATURECOUNTS(ch_gtf, ch_bams_raccolti)
         FEATURECOUNTS.out.summary,
         DESEQ2.out.multiqc_png,
         ENRICHR.out.multiqc_png,
-        ARRIBA.out.multiqc_png,
+        ARRIBA.out.multiqc_counts,
         IMSIG.out.multiqc_png,
         PLOT_DECONVOLUTION.out.multiqc_png,
         RMATS_PLOT.out.multiqc_png,
