@@ -1,21 +1,16 @@
 process SASHIMI_PLOT {
     tag "Sashimi Plot"
     label 'process_medium'
-
     container 'xinglab/rmats2sashimiplot:v3.0.0'
-
     input:
     path bams
     path samplesheet
     path rmats_files 
-
     output:
     path "sashimi_out/Sashimi_plot/*.pdf", emit: plots, optional: true
     path "sashimi_out/Sashimi_plot/*_mqc.png", emit: multiqc_png, optional: true
-
     script:
     """
-
     python -c "
     import csv, os, glob
     bams = glob.glob('*.bam')
@@ -37,9 +32,7 @@ process SASHIMI_PLOT {
     with open('b2.txt', 'w') as f2:
         f2.write(','.join(groups[conds[1]]))
     "
-
     head -n 6 SE.MATS.JC.txt > top5_SE.txt
-
     rmats2sashimiplot \\
         --b1 b1.txt \\
         --b2 b2.txt \\
@@ -57,6 +50,5 @@ process SASHIMI_PLOT {
             fi
         done
      fi
-
     """
 }
