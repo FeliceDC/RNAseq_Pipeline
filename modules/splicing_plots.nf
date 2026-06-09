@@ -1,17 +1,23 @@
 process SPLICING_PLOTS {
     tag "Splicing Plot: \${label}"
     label 'process_low'
+
     container 'rocker/geospatial:4.3.1'
+
     input:
     path files
     val label // Riceve 'rMATS' o 'DARTS_AI'
+
     output:
-    path "sashimi_out/Sashimi_plot/*.pdf", emit: plots, optional: true
+    path "*.pdf", emit: plots, optional: true
+    path "*_mqc.png", emit: multiqc_png, optional: true
+
     script:
     """
     cat << 'EOF' > plot_splicing.R
     library(ggplot2)
     prefix <- "${label}"
+
     # 1. VOLCANO PLOT
     if(file.exists("SE.MATS.JC.txt")) {
         data <- read.delim("SE.MATS.JC.txt", header=TRUE, stringsAsFactors=FALSE)
@@ -27,7 +33,9 @@ process SPLICING_PLOTS {
                   y="-log10(FDR)") +
              theme(legend.position="bottom")
         ggsave(paste0(prefix, "_Volcano_SE.pdf"), plot=p, width=8, height=6)
+        ggsave(paste0(prefix, "_Volcano_SE_mqc.png"), plot=p, width=8, height=6, dpi=300)
     }
+
     # 2. BAR PLOT
     events <- c("SE"="SE.MATS.JC.txt", "RI"="RI.MATS.JC.txt", "MXE"="MXE.MATS.JC.txt", "A5SS"="A5SS.MATS.JC.txt", "A3SS"="A3SS.MATS.JC.txt")
     counts <- data.frame(Event=character(), Significant=numeric(), stringsAsFactors=FALSE)
@@ -49,6 +57,7 @@ process SPLICING_PLOTS {
               theme(legend.position="none")
 
         ggsave(paste0(prefix, "_Summary_BarChart.pdf"), plot=p2, width=8, height=6)
+        ggsave(paste0(prefix, "_Summary_BarChart_mqc.png"), plot=p2, width=8, height=6, dpi=300
     }
     EOF
     Rscript plot_splicing.R
