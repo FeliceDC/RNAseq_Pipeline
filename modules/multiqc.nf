@@ -13,6 +13,6 @@ process MULTIQC {
 
     script:
     """
-    multiqc .
+    multiqc --config $multiqc_config .
     """
 }
