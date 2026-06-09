@@ -45,7 +45,7 @@ report_section_order:
     before: immucellai_abundance
   sashimi_plots:
     before: immucellai_plot
-  arriba_fusions:
+  arriba_counts:
     before: sashimi_plots
 
 # ==============================================================================
@@ -84,10 +84,15 @@ custom_data:
     section_name: "Alternative Splicing: Sashimi Plots"
     description: "Eventi di splicing differenziale rilevati."
     plot_type: "image"
-  arriba_fusions:
+  arriba_counts:
     section_name: "Arriba: Fusioni Geniche"
-    description: "Rappresentazione dei trascritti chimerici (se presenti)."
-    plot_type: "image"
+    description: "Numero totale di fusioni ad alta confidenza identificate per ogni campione."
+    plot_type: "bargraph"
+    pconfig:
+      id: "arriba_fusions_barplot"
+      title: "Fusions per Sample"
+      ylab: "Number of Fusions"
+      color: "#4daf4a"
 
 # ==============================================================================
 # 4. PATTERN DI RICERCA DEI FILE (Il "Gancio" con i tuoi script)
@@ -102,7 +107,7 @@ sp:
   immucellai_abundance: {fn: "immucellai_abundance_mqc.txt"}
   immucellai_plot: {fn: "*deconvolution*_mqc.png"}
   sashimi_plots: {fn: "*_sashimi_mqc.png"}
-  arriba_fusions: {fn: "*_arriba_mqc.png"}
+  arriba_counts: {fn: "*_arriba_counts_mqc.txt"}
 
 # ==============================================================================
 # 5. RIMOZIONE ESTENSIONI (Pulizia dei titoli)
