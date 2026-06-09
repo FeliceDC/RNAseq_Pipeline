@@ -57,7 +57,7 @@ process SPLICING_PLOTS {
               theme(legend.position="none")
 
         ggsave(paste0(prefix, "_Summary_BarChart.pdf"), plot=p2, width=8, height=6)
-        ggsave(paste0(prefix, "_Summary_BarChart_mqc.png"), plot=p2, width=8, height=6, dpi=300
+        ggsave(paste0(prefix, "_Summary_BarChart_mqc.png"), plot=p2, width=8, height=6, dpi=300)
     }
     EOF
     Rscript plot_splicing.R
