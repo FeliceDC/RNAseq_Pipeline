@@ -4,9 +4,6 @@ report_comment: >
   TME Deconvolution, and Alternative Splicing.
 title: "RNA-seq Analysis Report"
 
-# ==============================================================================
-# IMPOSTAZIONI GLOBALI NF-CORE
-# ==============================================================================
 export_plots: true
 disable_version_detection: true
 
@@ -20,106 +17,91 @@ table_columns_visible:
     percent_duplicates: False
 
 # ==============================================================================
-# 1. ORDINE E RINOMINAZIONE DEI MODULI NATIVI
+# 1. ORDINE DEI MODULI NATIVI
 # ==============================================================================
 module_order:
   - fastqc:
       name: "FastQC (Raw Reads)"
-      info: "Initial quality control of sequencing reads."
   - cutadapt:
       name: "Trim Galore"
-      info: "Adapter trimming and quality filtering."
   - star:
       name: "STAR Alignment"
-      info: "Alignment rates to the reference genome."
   - featurecounts:
       name: "featureCounts"
-      info: "Gene-level read quantification."
 
 # ==============================================================================
-# 2. ORDINE DELLE SEZIONI CUSTOM
+# 2. ORDINE DI IMPAGINAZIONE (Usa i nomi dei tuoi file grezzi)
 # ==============================================================================
-
 report_section_order:
-  id_deseq2_summary:
+  deseq2_summary:
     order: 960
-  id_deseq2_pca:
+  deseq2_pca:
     order: 950
-  id_deseq2_volcano:
+  deseq2_volcano:
     order: 940
-  id_enrichr_reactome:
+  Barplot_Reactome_2022:
     order: 930
-  id_enrichr_kegg:
+  Barplot_KEGG_2026:
     order: 920
-  id_enrichr_go:
+  Barplot_GO_Biological_Process_2023:
     order: 910
-  id_imsig_abundance:
+  imsig_abundance:
     order: 900
-  id_imsig_plot:
+  imsig_plot:
     order: 890
-  id_immucellai_abundance:
+  immucellai_abundance:
     order: 880
-  id_immucellai_plot:
+  Stacked_Barplot:
     order: 870
-  arriba_fusions:        
+  arriba_fusions:
     order: 860
-  id_rmats_summary:
+  rMATS_Summary_BarChart:
     order: 850
-  id_rmats_volcano:
+  rMATS_Volcano_SE:
     order: 840
-  id_darts_summary:
+  DARTS_AI_Summary_BarChart:
     order: 830
-  id_darts_volcano:
+  DARTS_AI_Volcano_SE:
     order: 820
 
 # ==============================================================================
-# 3. TITLES
+# 3. TITOLI ELEGANTI (Rinomina la barra laterale)
 # ==============================================================================
 custom_data:
-  id_deseq2_summary:
-    section_name: "DESeq2: Expression Summary"
-  id_deseq2_pca:
-    section_name: "DESeq2: PCA Plot"
-  id_deseq2_volcano:
-    section_name: "DESeq2: Volcano Plot"
-  id_enrichr_reactome:
-    section_name: "EnrichR: Reactome Pathway"
-  id_enrichr_kegg:
-    section_name: "EnrichR: KEGG Pathway"
-  id_enrichr_go:
-    section_name: "EnrichR: GO Biological Process"
-  id_imsig_abundance:
-    section_name: "ImSig: Deconvolution Data"
-  id_imsig_plot:
-    section_name: "ImSig: Composition Plot"
-  id_immucellai_abundance:
-    section_name: "ImmuCellAI: Fractions Data"
-  id_immucellai_plot:
-    section_name: "ImmuCellAI: Deconvolution Plot"
-  id_rmats_summary:
-    section_name: "rMATS: Event Summary"
-  id_rmats_volcano:
-    section_name: "rMATS: Volcano Plot"
-  id_darts_summary:
-    section_name: "DARTS: Event Summary"
-  id_darts_volcano:
-    section_name: "DARTS: Volcano Plot"
+  deseq2_summary:
+    section_name: "2. DESeq2: Expression Summary"
+  deseq2_pca:
+    section_name: "2. DESeq2: PCA Plot"
+  deseq2_volcano:
+    section_name: "2. DESeq2: Volcano Plot"
+  Barplot_Reactome_2022:
+    section_name: "3. EnrichR: Reactome Pathway"
+  Barplot_KEGG_2026:
+    section_name: "3. EnrichR: KEGG Pathway"
+  Barplot_GO_Biological_Process_2023:
+    section_name: "3. EnrichR: GO Biological Process"
+  imsig_abundance:
+    section_name: "4. ImSig: Deconvolution Data"
+  imsig_plot:
+    section_name: "4. ImSig: Composition Plot"
+  immucellai_abundance:
+    section_name: "5. ImmuCellAI: Fractions Data"
+  Stacked_Barplot:
+    section_name: "5. ImmuCellAI: Deconvolution Plot"
+  rMATS_Summary_BarChart:
+    section_name: "7. rMATS: Event Summary"
+  rMATS_Volcano_SE:
+    section_name: "7. rMATS: Volcano Plot"
+  DARTS_AI_Summary_BarChart:
+    section_name: "8. DARTS: Event Summary"
+  DARTS_AI_Volcano_SE:
+    section_name: "8. DARTS: Volcano Plot"
 
 # ==============================================================================
-# 4. SEARCH PATTERNS
+# 4. RICERCA FILE (Solo per i file di testo)
 # ==============================================================================
+# Le immagini _mqc.png le trova e le mappa da solo!
 sp:
-  id_deseq2_summary: {fn: "deseq2_summary_mqc.txt"}
-  id_deseq2_pca: {fn: "*pca_mqc.png"}
-  id_deseq2_volcano: {fn: "*volcano_mqc.png"}
-  id_enrichr_reactome: {fn: "*Reactome*_mqc.png"}
-  id_enrichr_kegg: {fn: "*KEGG*_mqc.png"}
-  id_enrichr_go: {fn: "*Biological_Process*_mqc.png"}
-  id_imsig_abundance: {fn: "imsig_abundance_mqc.txt"}
-  id_imsig_plot: {fn: "imsig_plot_mqc.png"}
-  id_immucellai_abundance: {fn: "immucellai_abundance_mqc.txt"}
-  id_immucellai_plot: {fn: "Stacked_Barplot_mqc.png"}
-  id_rmats_summary: {fn: "rMATS_Summary_BarChart_mqc.png"}
-  id_rmats_volcano: {fn: "rMATS_Volcano_SE_mqc.png"}
-  id_darts_summary: {fn: "DARTS_AI_Summary_BarChart_mqc.png"}
-  id_darts_volcano: {fn: "DARTS_AI_Volcano_SE_mqc.png"}
+  deseq2_summary: {fn: "deseq2_summary_mqc.txt"}
+  imsig_abundance: {fn: "imsig_abundance_mqc.txt"}
+  immucellai_abundance: {fn: "immucellai_abundance_mqc.txt"}
