@@ -103,7 +103,7 @@ FEATURECOUNTS(ch_gtf, ch_bams_raccolti)
         ch_darts_sashimi = DARTS_SASHIMI.out.plots
     }
 
-    ch_multiqc_config = Channel.fromPath("${projectDir}/multiqc_config.yaml")
+   ch_multiqc_config = Channel.fromPath("${projectDir}/assets/multiqc_config.yaml", checkIfExists: true)
 
     ch_multiqc_files = Channel.empty()
     ch_multiqc_files = ch_multiqc_files.mix(
