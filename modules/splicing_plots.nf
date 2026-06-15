@@ -33,7 +33,7 @@ process SPLICING_PLOTS {
                   y="-log10(FDR)") +
              theme(legend.position="bottom")
         ggsave(paste0(prefix, "_Volcano_SE.pdf"), plot=p, width=8, height=6)
-        ggsave(paste0(prefix, "_Volcano_SE_mqc.png"), plot=p, width=8, height=6, dpi=300)
+        ggsave(paste0(prefix, "_Volcano_SE_mqc.png"), plot=p, width=14, height=8, dpi=300)
     }
 
     # 2. BAR PLOT
@@ -57,7 +57,7 @@ process SPLICING_PLOTS {
               theme(legend.position="none")
 
         ggsave(paste0(prefix, "_Summary_BarChart.pdf"), plot=p2, width=8, height=6)
-        ggsave(paste0(prefix, "_Summary_BarChart_mqc.png"), plot=p2, width=8, height=6, dpi=300)
+        ggsave(paste0(prefix, "_Summary_BarChart_mqc.png"), plot=p2, width=14, height=8, dpi=300)
     }
     EOF
     Rscript plot_splicing.R
