@@ -33,36 +33,36 @@ module_order:
 # 2. ORDINE DI IMPAGINAZIONE (Usa i nomi dei tuoi file grezzi)
 # ==============================================================================
 report_section_order:
-  deseq2_summary:
-    order: 960
+deseq2_summary:
+    order: -10
   deseq2_pca:
-    order: 950
+    order: -20
   deseq2_volcano:
-    order: 940
+    order: -30
   Barplot_Reactome_2022:
-    order: 930
+    order: -40
   Barplot_KEGG_2026:
-    order: 920
+    order: -50
   Barplot_GO_Biological_Process_2023:
-    order: 910
+    order: -60
   imsig_abundance:
-    order: 900
+    order: -70
   imsig_plot:
-    order: 890
+    order: -80
   immucellai_abundance:
-    order: 880
+    order: -90
   Stacked_Barplot:
-    order: 870
+    order: -100
   arriba_fusions:
-    order: 860
+    order: -110
   rMATS_Summary_BarChart:
-    order: 850
+    order: -120
   rMATS_Volcano_SE:
-    order: 840
+    order: -130
   DARTS_AI_Summary_BarChart:
-    order: 830
+    order: -140
   DARTS_AI_Volcano_SE:
-    order: 820
+    order: -150
 
 # ==============================================================================
 # 3. TITOLI ELEGANTI (Rinomina la barra laterale)
