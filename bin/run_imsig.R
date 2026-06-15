@@ -59,4 +59,4 @@ p <- ggplot(df_long, aes(x = Sample, y = Percentage, fill = CellType)) +
     
     scale_fill_brewer(palette = "Paired") 
 ggsave("ImSig_plot.pdf", plot = p, width = 10, height = 7)
-ggsave("imsig_plot_mqc.png", plot = p, width = 10, height = 7, dpi = 300)
+ggsave("imsig_plot_mqc.png", plot = p, width = 14, height = 8, dpi = 300)
