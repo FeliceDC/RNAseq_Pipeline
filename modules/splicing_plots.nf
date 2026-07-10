@@ -36,6 +36,8 @@ p <- ggplot(data, aes(x=IncLevelDifference, y=-log10(FDR), color=Significance)) 
            x="Inclusion Level Difference (delta PSI)",
            y="-log10(FDR)") +
       theme(legend.position="bottom")
+    ggsave(paste0(prefix, "_Volcano_SE.pdf"), plot=p, width=8, height=6)
+    ggsave(paste0(prefix, "_Volcano_SE_mqc.png"), plot=p, width=14, height=8, dpi=300)
 
     # 2. BAR PLOT
     events <- c("SE"="SE.MATS.JC.txt", "RI"="RI.MATS.JC.txt", "MXE"="MXE.MATS.JC.txt", "A5SS"="A5SS.MATS.JC.txt", "A3SS"="A3SS.MATS.JC.txt")
