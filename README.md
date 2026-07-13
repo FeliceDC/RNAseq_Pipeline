@@ -64,6 +64,9 @@ Now you should be ready to run the pipeline.
 
  | Parametro | Descrizione |
 | :--- | :--- |
+| `--input_reads` | Serve per specificare il percorso in cui si trovano i file fastq.gz |
+| `--fasta` | Serve per specificare il percorso in cui si trova il genoma di riferimento |
+| `--gtf` | Serve per specificare il percorso in cui si trova il file per le annotazioni genomiche |
 | `--skip_fusions` | Salta l'analisi delle fusioni geniche (Arriba) |
 | `--skip_deconvolution` | Salta la stima dell'infiltrazione cellulare |
 | `--skip_differential` | Salta l'analisi differenziale (DESeq2/EnrichR) |
