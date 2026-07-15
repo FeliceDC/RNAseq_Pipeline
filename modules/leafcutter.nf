@@ -10,7 +10,7 @@ process LEAFCUTTER {
     output:
     path "leafcutter_out/*", emit: leafcutter_results
 
-    script:
+   script:
     """
     # 1. Generazione del file dei gruppi (groups_file.txt)
     python -c "
@@ -27,40 +27,41 @@ with open('${samplesheet}', 'r') as f, open('groups_file.txt', 'w') as out:
         for b in bams:
             if b.startswith(sample) and not b[len(sample):len(sample)+1].isdigit():
                 prefix = b.replace('.bam', '')
-                # Usiamo .format() con DOPPIO backslash per l'escape corretto in Nextflow
+                # Usiamo .format() con DOPPIO backslash per l'escape
                 out.write('{}\\t{}\\n'.format(prefix, cond))
 "
 
     touch juncfiles.txt
     mkdir -p leafcutter_out
 
-    # 2. Estrazione delle giunzioni usando lo script nativo di LeafCutter
+    # --- RICERCA DINAMICA DEGLI SCRIPT ---
+    # Troviamo esattamente dove il container ha nascosto questi file
+    BAM2JUNC=\$(find / -name "bam2junc.sh" -type f 2>/dev/null | head -n 1)
+    CLUSTER_PY=\$(find / -name "leafcutter_cluster.py" -type f 2>/dev/null | head -n 1)
+    DS_R=\$(find / -name "leafcutter_ds.R" -type f 2>/dev/null | head -n 1)
+
+    # 2. Estrazione delle giunzioni
     for bam in *.bam; do
-        # ESCAPE AGGIUNTO QUI: \${bam%.bam}
         prefix=\${bam%.bam}
-        
-        # ESCAPE AGGIUNTO QUI: \$bam
         echo "Estraendo giunzioni da \$bam..."
         
-        # ESCAPE AGGIUNTO QUI: \$bam e \${prefix}
-        sh /opt/software/leafcutter/scripts/bam2junc.sh \$bam \${prefix}.junc
+        # Usiamo la variabile trovata da Linux
+        sh \$BAM2JUNC \$bam \${prefix}.junc
         
-        # ESCAPE AGGIUNTO QUI: \${prefix}
         echo \${prefix}.junc >> juncfiles.txt
     done
 
     # 3. Clustering delle giunzioni
-    python /opt/software/leafcutter/clustering/leafcutter_cluster.py \\
+    python \$CLUSTER_PY \\
         -j juncfiles.txt \\
         -m 50 \\
         -o leafcutter_out/fornax \\
         -l 500000
 
     # 4. Differential Splicing
-    /opt/software/leafcutter/scripts/leafcutter_ds.R \\
+    Rscript \$DS_R \\
         --num_threads ${task.cpus} \\
         leafcutter_out/fornax_perind_numers.counts.gz \\
         groups_file.txt \\
         -o leafcutter_out/fornax_ds
     """
-}
