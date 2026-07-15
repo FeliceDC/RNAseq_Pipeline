@@ -34,28 +34,30 @@ with open('${samplesheet}', 'r') as f, open('groups_file.txt', 'w') as out:
     touch juncfiles.txt
     mkdir -p leafcutter_out
 
-    # 2. Estrazione delle giunzioni da ogni file BAM usando regtools
-    for bam in *.bam; do
-        prefix=\${bam%.bam}
-        echo "Estraendo giunzioni da \$bam..."
-        # I parametri standard di LeafCutter: minimo 50bp, massimo 500kb di introne
-        regtools junctions extract -a 8 -m 50 -M 500000 \$bam -o \${prefix}.junc
-        
-        # Aggiunge il nome del file junc alla lista per il clustering
-        echo \${prefix}.junc >> juncfiles.txt
-    done
+# 2. Estrazione delle giunzioni usando lo script nativo di LeafCutter
+      for bam in *.bam; do
+          prefix=${bam%.bam}
+          echo "Estraendo giunzioni da $bam..."
+          
+          # Sostituito regtools con bam2junc.sh (nativo del container)
+          sh /opt/software/leafcutter/scripts/bam2junc.sh $bam ${prefix}.junc
+          
+          # Aggiunge il nome del file junc alla lista per il clustering
+          echo ${prefix}.junc >> juncfiles.txt
+      done
 
-    # 3. Clustering delle giunzioni
-    python /opt/software/leafcutter/clustering/leafcutter_cluster_regtools.py \\
-        -j juncfiles.txt \\
-        -m 50 \\
-        -o leafcutter_out/fornax \\
-        -l 500000
+      # 3. Clustering delle giunzioni (usando lo script base, non quello per regtools)
+      python /opt/software/leafcutter/clustering/leafcutter_cluster.py \
+          -j juncfiles.txt \
+          -m 50 \
+          -o leafcutter_out/fornax \
+          -l 500000
 
-    /opt/software/leafcutter/scripts/leafcutter_ds.R \\
-        --num_threads ${task.cpus} \\
-        leafcutter_out/fornax_perind_numers.counts.gz \\
-        groups_file.txt \\
-        -o leafcutter_out/fornax_ds
+      # 4. Differential Splicing
+      /opt/software/leafcutter/scripts/leafcutter_ds.R \
+          --num_threads ${task.cpus} \
+          leafcutter_out/fornax_perind_numers.counts.gz \
+          groups_file.txt \
+          -o leafcutter_out/fornax_ds
     """
 }
