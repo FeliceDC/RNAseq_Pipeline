@@ -1,6 +1,7 @@
 nextflow.enable.dsl=2
+
 include { FASTQC } from '../modules/fastqc'
-include {TRIMGALORE} from '../modules/trimgalore'
+include { TRIMGALORE } from '../modules/trimgalore'
 include { STAR_INDEX; STAR_ALIGN } from '../modules/star'
 include { FEATURECOUNTS } from '../modules/subread'
 include { MULTIQC } from '../modules/multiqc'
@@ -16,122 +17,130 @@ include { SASHIMI_PLOT as RMATS_SASHIMI } from '../modules/splicing_sashimi_plot
 include { MAJIQ } from '../modules/majiq'
 include { LEAFCUTTER } from '../modules/leafcutter'
 
-
 workflow RNA_SEQ_ANALYSIS {
-log.info "RNA-seq analysis started..."
-
-if (params.single_end) {
-ch_reads = Channel.fromPath(params.input_reads, checkIfExists: true)
-                  .map {file -> tuple(file.simpleName, [file]) }
-} else {
-ch_reads = Channel.fromFilePairs(params.input_reads, checkIfExists: true)
-}
-
-FASTQC(ch_reads)
-TRIMGALORE(ch_reads)
-ch_fasta = file(params.fasta)
-ch_gtf   = file(params.gtf)
-STAR_INDEX(ch_fasta, ch_gtf)
-STAR_ALIGN(STAR_INDEX.out.index, TRIMGALORE.out.reads)
-ch_bams_raccolti = STAR_ALIGN.out.bam.map { it[1] }.collect()
-FEATURECOUNTS(ch_gtf, ch_bams_raccolti)
-
-    // Fusions
-    ch_arriba_fusions      = Channel.empty()
-    ch_arriba_discarded    = Channel.empty()
-    ch_arriba_plots        = Channel.empty()
     
-    // Differential analysis
-    ch_deseq2_results      = Channel.empty()
-    ch_enrichr_results     = Channel.empty()
-    
-    // Deconvolution
-    ch_immucellai_results  = Channel.empty()
-    ch_deconvolution_plots = Channel.empty()
-    ch_imsig_results       = Channel.empty()
-    ch_imsig_plot          = Channel.empty()
-    
-    // Splicing
-    ch_rmats_results       = Channel.empty() 
-    ch_rmats_plots         = Channel.empty()
-    ch_rmats_sashimi       = Channel.empty()
-    ch_majiq_results       = Channel.empty()
-    ch_leafcutter_results  = Channel.empty()
-    ch_rmats_multiqc       = Channel.empty()
+    main:
+        log.info "RNA-seq analysis started..."
 
+        if (params.single_end) {
+            ch_reads = Channel.fromPath(params.input_reads, checkIfExists: true)
+                              .map {file -> tuple(file.simpleName, [file]) }
+        } else {
+            ch_reads = Channel.fromFilePairs(params.input_reads, checkIfExists: true)
+        }
 
-
-    if (!params.skip_fusions) {
-        ARRIBA(STAR_ALIGN.out.bam, ch_fasta, ch_gtf)
-        ch_arriba_fusions   = ARRIBA.out.fusions
-        ch_arriba_discarded = ARRIBA.out.discarded
-        ch_arriba_plots     = ARRIBA.out.plots
-    }
-
-    if (!params.skip_differential) {
-        DESEQ2(FEATURECOUNTS.out.counts, file(params.samplesheet))
-        ENRICHR(DESEQ2.out.results_tables)
+        FASTQC(ch_reads)
+        TRIMGALORE(ch_reads)
+        ch_fasta = file(params.fasta)
+        ch_gtf   = file(params.gtf)
         
-        ch_deseq2_results  = DESEQ2.out.results_tables.mix(DESEQ2.out.results_pdf)
-        ch_enrichr_results = ENRICHR.out.enrichr_results
-    }
-
-    if (!params.skip_deconvolution) {
-        IMMUCELLAI(FEATURECOUNTS.out.counts)
-        PLOT_DECONVOLUTION(IMMUCELLAI.out.fractions)
-        IMSIG(FEATURECOUNTS.out.counts)
+        STAR_INDEX(ch_fasta, ch_gtf)
+        STAR_ALIGN(STAR_INDEX.out.index, TRIMGALORE.out.reads)
         
-        ch_immucellai_results  = IMMUCELLAI.out.tpm_matrix.mix(IMMUCELLAI.out.fractions)
-        ch_deconvolution_plots = PLOT_DECONVOLUTION.out.plots
-        ch_imsig_results       = IMSIG.out.results
-        ch_imsig_plot          = IMSIG.out.plot
-    }
+        ch_bams_raccolti = STAR_ALIGN.out.bam.map { it[1] }.collect()
+        FEATURECOUNTS(ch_gtf, ch_bams_raccolti)
 
-   if (!params.skip_splicing) {
+        // Inizializzazione Canali di Sicurezza (Evitano crash se un modulo viene skippato)
+        ch_arriba_fusions      = Channel.empty()
+        ch_arriba_discarded    = Channel.empty()
+        ch_arriba_plots        = Channel.empty()
+        ch_arriba_multiqc      = Channel.empty()
         
-        // Trasforma la stringa del config in una lista (es. ['rmats', 'majiq'])
-        def tools = params.splicing_tools ? params.splicing_tools.tokenize(',') : []
+        ch_deseq2_results      = Channel.empty()
+        ch_deseq2_multiqc      = Channel.empty()
+        ch_enrichr_results     = Channel.empty()
+        ch_enrichr_multiqc     = Channel.empty()
+        
+        ch_immucellai_results  = Channel.empty()
+        ch_deconvolution_plots = Channel.empty()
+        ch_deconv_multiqc      = Channel.empty()
+        ch_imsig_results       = Channel.empty()
+        ch_imsig_plot          = Channel.empty()
+        ch_imsig_multiqc       = Channel.empty()
+        
+        ch_rmats_results       = Channel.empty() 
+        ch_rmats_plots         = Channel.empty()
+        ch_rmats_sashimi       = Channel.empty()
+        ch_rmats_multiqc       = Channel.empty()
+        
+        ch_majiq_results       = Channel.empty()
+        ch_leafcutter_results  = Channel.empty()
 
-        if (tools.contains('rmats')) {
-            RMATS(ch_bams_raccolti, file(params.samplesheet), ch_gtf)
-            RMATS_PLOT(RMATS.out.splicing_results, 'rMATS')
-            RMATS_SASHIMI(ch_bams_raccolti, file(params.samplesheet), RMATS.out.splicing_results)
+        // ESECUZIONI CONDIZIONALI
+        if (!params.skip_fusions) {
+            ARRIBA(STAR_ALIGN.out.bam, ch_fasta, ch_gtf)
+            ch_arriba_fusions   = ARRIBA.out.fusions
+            ch_arriba_discarded = ARRIBA.out.discarded
+            ch_arriba_plots     = ARRIBA.out.plots
+            ch_arriba_multiqc   = ARRIBA.out.multiqc_counts
+        }
+
+        if (!params.skip_differential) {
+            DESEQ2(FEATURECOUNTS.out.counts, file(params.samplesheet))
+            ENRICHR(DESEQ2.out.results_tables)
             
-            ch_rmats_results = RMATS.out.splicing_results
-            ch_rmats_plots   = RMATS_PLOT.out.plots
-            ch_rmats_sashimi = RMATS_SASHIMI.out.plots
-            ch_rmats_multiqc = RMATS_PLOT.out.multiqc_png
+            ch_deseq2_results  = DESEQ2.out.results_tables.mix(DESEQ2.out.results_pdf)
+            ch_deseq2_multiqc  = DESEQ2.out.multiqc_png
+            ch_enrichr_results = ENRICHR.out.enrichr_results
+            ch_enrichr_multiqc = ENRICHR.out.multiqc_png
         }
 
-        if (tools.contains('majiq')) {
-            MAJIQ(ch_bams_raccolti, file(params.samplesheet), ch_gtf)
-            ch_majiq_results = MAJIQ.out.majiq_results
+        if (!params.skip_deconvolution) {
+            IMMUCELLAI(FEATURECOUNTS.out.counts)
+            PLOT_DECONVOLUTION(IMMUCELLAI.out.fractions)
+            IMSIG(FEATURECOUNTS.out.counts)
+            
+            ch_immucellai_results  = IMMUCELLAI.out.tpm_matrix.mix(IMMUCELLAI.out.fractions)
+            ch_deconvolution_plots = PLOT_DECONVOLUTION.out.plots
+            ch_deconv_multiqc      = PLOT_DECONVOLUTION.out.multiqc_png
+            ch_imsig_results       = IMSIG.out.results
+            ch_imsig_plot          = IMSIG.out.plot
+            ch_imsig_multiqc       = IMSIG.out.multiqc_png
         }
 
-        if (tools.contains('leafcutter')) {
-            LEAFCUTTER(ch_bams_raccolti, file(params.samplesheet))
-            ch_leafcutter_results = LEAFCUTTER.out.leafcutter_results
+        if (!params.skip_splicing) {
+            def tools = params.splicing_tools ? params.splicing_tools.tokenize(',') : []
+
+            if (tools.contains('rmats')) {
+                RMATS(ch_bams_raccolti, file(params.samplesheet), ch_gtf)
+                RMATS_PLOT(RMATS.out.splicing_results, 'rMATS')
+                RMATS_SASHIMI(ch_bams_raccolti, file(params.samplesheet), RMATS.out.splicing_results)
+                
+                ch_rmats_results = RMATS.out.splicing_results
+                ch_rmats_plots   = RMATS_PLOT.out.plots
+                ch_rmats_sashimi = RMATS_SASHIMI.out.plots
+                ch_rmats_multiqc = RMATS_PLOT.out.multiqc_png
+            }
+
+            if (tools.contains('majiq')) {
+                MAJIQ(ch_bams_raccolti, file(params.samplesheet), ch_gtf)
+                ch_majiq_results = MAJIQ.out.majiq_results
+            }
+
+            if (tools.contains('leafcutter')) {
+                LEAFCUTTER(ch_bams_raccolti, file(params.samplesheet))
+                ch_leafcutter_results = LEAFCUTTER.out.leafcutter_results
+            }
         }
-    }
 
-   ch_multiqc_config = Channel.fromPath("${projectDir}/assets/multiqc_config.yaml", checkIfExists: true)
+        // MULTIQC
+        ch_multiqc_config = Channel.fromPath("${projectDir}/assets/multiqc_config.yaml", checkIfExists: true)
 
-    ch_multiqc_files = Channel.empty()
-    ch_multiqc_files = ch_multiqc_files.mix(
-        FASTQC.out.zip,
-        TRIMGALORE.out.log,
-        STAR_ALIGN.out.log,
-        FEATURECOUNTS.out.summary,
-        DESEQ2.out.multiqc_png,
-        ENRICHR.out.multiqc_png,
-        ARRIBA.out.multiqc_counts,
-        IMSIG.out.multiqc_png,
-        PLOT_DECONVOLUTION.out.multiqc_png,
-        RMATS_PLOT.out.multiqc_png,
-        ch_rmats_multiqc
-    )
+        ch_multiqc_files = Channel.empty()
+        ch_multiqc_files = ch_multiqc_files.mix(
+            FASTQC.out.zip,
+            TRIMGALORE.out.log,
+            STAR_ALIGN.out.log,
+            FEATURECOUNTS.out.summary,
+            ch_deseq2_multiqc,
+            ch_enrichr_multiqc,
+            ch_arriba_multiqc,
+            ch_imsig_multiqc,
+            ch_deconv_multiqc,
+            ch_rmats_multiqc // <-- QUI HO RIMOSSO IL DOPPIONE
+        )
 
-    MULTIQC( ch_multiqc_files.collect(), ch_multiqc_config )
+        MULTIQC( ch_multiqc_files.collect(), ch_multiqc_config )
 
     emit:
         fastqc_results        = FASTQC.out.html.mix(FASTQC.out.zip)
