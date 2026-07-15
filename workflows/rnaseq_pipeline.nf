@@ -11,10 +11,10 @@ include { IMSIG } from '../modules/imsig'
 include { ARRIBA } from '../modules/arriba'
 include { RMATS } from '../modules/rmats'
 include { SPLICING_PLOTS as RMATS_PLOT } from '../modules/splicing_plots'
-include { SPLICING_PLOTS as DARTS_PLOT } from '../modules/splicing_plots'
 include { SASHIMI_PLOT as RMATS_SASHIMI } from '../modules/splicing_sashimi_plot'
-include { SASHIMI_PLOT as DARTS_SASHIMI } from '../modules/splicing_sashimi_plot'
-include { DARTS } from '../modules/darts'
+include { MAJIQ } from '../modules/majiq'
+include { LEAFCUTTER } from '../modules/leafcutter'
+
 
 workflow RNA_SEQ_ANALYSIS {
 log.info "RNA-seq analysis started..."
@@ -51,12 +51,13 @@ FEATURECOUNTS(ch_gtf, ch_bams_raccolti)
     ch_imsig_plot          = Channel.empty()
     
     // Splicing
-    ch_rmats_results       = Channel.empty()
-    ch_darts_results       = Channel.empty()
+    ch_rmats_results       = Channel.empty() 
     ch_rmats_plots         = Channel.empty()
-    ch_darts_plots         = Channel.empty()
     ch_rmats_sashimi       = Channel.empty()
-    ch_darts_sashimi       = Channel.empty()
+    ch_majiq_results       = Channel.empty()
+    ch_leafcutter_results  = Channel.empty()
+    ch_rmats_multiqc       = Channel.empty()
+
 
 
     if (!params.skip_fusions) {
@@ -85,22 +86,31 @@ FEATURECOUNTS(ch_gtf, ch_bams_raccolti)
         ch_imsig_plot          = IMSIG.out.plot
     }
 
-    if (!params.skip_splicing) {
-        RMATS(ch_bams_raccolti, file(params.samplesheet), ch_gtf)
-        DARTS(ch_bams_raccolti, file(params.samplesheet), ch_gtf)
+   if (!params.skip_splicing) {
         
-        RMATS_PLOT(RMATS.out.splicing_results, 'rMATS')
-        DARTS_PLOT(DARTS.out.splicing_results, 'DARTS_AI')
-        
-        RMATS_SASHIMI(ch_bams_raccolti, file(params.samplesheet), RMATS.out.splicing_results)
-        DARTS_SASHIMI(ch_bams_raccolti, file(params.samplesheet), DARTS.out.splicing_results)
-        
-        ch_rmats_results = RMATS.out.splicing_results
-        ch_darts_results = DARTS.out.splicing_results
-        ch_rmats_plots   = RMATS_PLOT.out.plots
-        ch_darts_plots   = DARTS_PLOT.out.plots
-        ch_rmats_sashimi = RMATS_SASHIMI.out.plots
-        ch_darts_sashimi = DARTS_SASHIMI.out.plots
+        // Trasforma la stringa del config in una lista (es. ['rmats', 'majiq'])
+        def tools = params.splicing_tools ? params.splicing_tools.tokenize(',') : []
+
+        if (tools.contains('rmats')) {
+            RMATS(ch_bams_raccolti, file(params.samplesheet), ch_gtf)
+            RMATS_PLOT(RMATS.out.splicing_results, 'rMATS')
+            RMATS_SASHIMI(ch_bams_raccolti, file(params.samplesheet), RMATS.out.splicing_results)
+            
+            ch_rmats_results = RMATS.out.splicing_results
+            ch_rmats_plots   = RMATS_PLOT.out.plots
+            ch_rmats_sashimi = RMATS_SASHIMI.out.plots
+            ch_rmats_multiqc = RMATS_PLOT.out.multiqc_png
+        }
+
+        if (tools.contains('majiq')) {
+            MAJIQ(ch_bams_raccolti, file(params.samplesheet), ch_gtf)
+            ch_majiq_results = MAJIQ.out.majiq_results
+        }
+
+        if (tools.contains('leafcutter')) {
+            LEAFCUTTER(ch_bams_raccolti, file(params.samplesheet))
+            ch_leafcutter_results = LEAFCUTTER.out.leafcutter_results
+        }
     }
 
    ch_multiqc_config = Channel.fromPath("${projectDir}/assets/multiqc_config.yaml", checkIfExists: true)
@@ -116,8 +126,8 @@ FEATURECOUNTS(ch_gtf, ch_bams_raccolti)
         ARRIBA.out.multiqc_counts,
         IMSIG.out.multiqc_png,
         PLOT_DECONVOLUTION.out.multiqc_png,
-        RMATS_PLOT.out.multiqc_png,
-        DARTS_PLOT.out.multiqc_png
+        RMATS_PLOT.out.multiqc_png
+        ch_rmats_multiqc
     )
 
     MULTIQC( ch_multiqc_files.collect(), ch_multiqc_config )
@@ -143,9 +153,8 @@ FEATURECOUNTS(ch_gtf, ch_bams_raccolti)
         imsig_plot            = ch_imsig_plot.flatten()
         
         rmats_results         = ch_rmats_results.flatten()
-        darts_results         = ch_darts_results.flatten()
         rmats_plots           = ch_rmats_plots.flatten()
-        darts_plots           = ch_darts_plots.flatten()
         rmats_sashimi         = ch_rmats_sashimi.flatten()
-        darts_sashimi         = ch_darts_sashimi.flatten()
+        majiq_results         = ch_majiq_results.flatten()
+        leafcutter_results    = ch_leafcutter_results.flatten()
 }
