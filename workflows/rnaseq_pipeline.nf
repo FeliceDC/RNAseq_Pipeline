@@ -1,3 +1,4 @@
+nextflow.enable.dsl=2
 include { FASTQC } from '../modules/fastqc'
 include {TRIMGALORE} from '../modules/trimgalore'
 include { STAR_INDEX; STAR_ALIGN } from '../modules/star'
@@ -126,7 +127,7 @@ FEATURECOUNTS(ch_gtf, ch_bams_raccolti)
         ARRIBA.out.multiqc_counts,
         IMSIG.out.multiqc_png,
         PLOT_DECONVOLUTION.out.multiqc_png,
-        RMATS_PLOT.out.multiqc_png
+        RMATS_PLOT.out.multiqc_png,
         ch_rmats_multiqc
     )
 
