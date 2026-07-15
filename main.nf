@@ -76,13 +76,11 @@ publish:
         arriba_fusions      = RNA_SEQ_ANALYSIS.out.arriba_fusions
         arriba_discarded    = RNA_SEQ_ANALYSIS.out.arriba_discarded
         arriba_plots        = RNA_SEQ_ANALYSIS.out.arriba_plots
-        rmats_results = RNA_SEQ_ANALYSIS.out.rmats_results
-        darts_results = RNA_SEQ_ANALYSIS.out.darts_results
+        rmats_results         = RNA_SEQ_ANALYSIS.out.rmats_results
         rmats_plots           = RNA_SEQ_ANALYSIS.out.rmats_plots
-        darts_plots           = RNA_SEQ_ANALYSIS.out.darts_plots
         rmats_sashimi         = RNA_SEQ_ANALYSIS.out.rmats_sashimi
-        darts_sashimi         = RNA_SEQ_ANALYSIS.out.darts_sashimi
-
+        majiq_results         = RNA_SEQ_ANALYSIS.out.majiq_results
+        leafcutter_results    = RNA_SEQ_ANALYSIS.out.leafcutter_results
 }
 
 output {
@@ -103,9 +101,9 @@ output {
     arriba_discarded      { path "${params.outdir}/Fusions/Arriba/Discarded"; mode 'copy' }
     arriba_plots          { path "${params.outdir}/Fusions/Arriba/Plots"; mode 'copy' }
     rmats_results         { path "${params.outdir}/Splicing/rMATS-turbo"; mode 'copy' }
-    darts_results         { path "${params.outdir}/Splicing/DARTS"; mode 'copy' }
     rmats_plots           { path "${params.outdir}/Splicing/rMATS-turbo/Plots"; mode 'copy' }
-    darts_plots           { path "${params.outdir}/Splicing/DARTS/Plots"; mode 'copy' }
     rmats_sashimi         { path "${params.outdir}/Splicing/rMATS-turbo/Plots/Sashimi"; mode 'copy' }
-    darts_sashimi         { path "${params.outdir}/Splicing/DARTS/Plots/Sashimi"; mode 'copy' }
+    majiq_results         { path "${params.outdir}/Splicing/MAJIQ"; mode 'copy' }
+    leafcutter_results    { path "${params.outdir}/Splicing/LeafCutter"; mode 'copy' }
+
 }
