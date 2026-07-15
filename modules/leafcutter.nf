@@ -10,58 +10,54 @@ process LEAFCUTTER {
     output:
     path "leafcutter_out/*", emit: leafcutter_results
 
-   script:
+    script:
     """
-    # 1. Generazione del file dei gruppi (groups_file.txt)
-    python -c "
-import csv, glob
+    # 1. Creiamo lo script Python separatamente per evitare QUALSIASI errore di sintassi Groovy
+    cat << 'EOF' > generate_groups.py
+    import csv, glob, sys
 
-bams = glob.glob('*.bam')
+    samplesheet_file = sys.argv[1]
+    design_col = sys.argv[2]
 
-with open('${samplesheet}', 'r') as f, open('groups_file.txt', 'w') as out:
-    reader = csv.DictReader(f, skipinitialspace=True)
-    for row in reader:
-        sample = row['sample']
-        cond = row['${params.design}']
-        
-        for b in bams:
-            if b.startswith(sample) and not b[len(sample):len(sample)+1].isdigit():
-                prefix = b.replace('.bam', '')
-                # Usiamo .format() con DOPPIO backslash per l'escape
-                out.write('{}\\t{}\\n'.format(prefix, cond))
-"
+    bams = glob.glob('*.bam')
+
+    with open(samplesheet_file, 'r') as f, open('groups_file.txt', 'w') as out:
+        reader = csv.DictReader(f, skipinitialspace=True)
+        for row in reader:
+            sample = row['sample']
+            cond = row[design_col]
+            
+            for b in bams:
+                if b.startswith(sample) and not b[len(sample):len(sample)+1].isdigit():
+                    prefix = b.replace('.bam', '')
+                    out.write("{}\\t{}\\n".format(prefix, cond))
+    EOF
+
+    # 2. Eseguiamo lo script Python passando i parametri di Nextflow in modo sicuro
+    python generate_groups.py ${samplesheet} ${params.design}
 
     touch juncfiles.txt
     mkdir -p leafcutter_out
 
-    # --- RICERCA DINAMICA DEGLI SCRIPT ---
-    # Troviamo esattamente dove il container ha nascosto questi file
-    BAM2JUNC=\$(find / -name "bam2junc.sh" -type f 2>/dev/null | head -n 1)
-    CLUSTER_PY=\$(find / -name "leafcutter_cluster.py" -type f 2>/dev/null | head -n 1)
-    DS_R=\$(find / -name "leafcutter_ds.R" -type f 2>/dev/null | head -n 1)
+    # 3. Ricerca rapida degli script originali nel container (nella cartella /opt)
+    BAM2JUNC=\$(find /opt -name "bam2junc.sh" -type f 2>/dev/null | head -n 1)
+    CLUSTER_PY=\$(find /opt -name "leafcutter_cluster.py" -type f 2>/dev/null | head -n 1)
+    DS_R=\$(find /opt -name "leafcutter_ds.R" -type f 2>/dev/null | head -n 1)
 
-    # 2. Estrazione delle giunzioni
+    # 4. Estrazione giunzioni
     for bam in *.bam; do
         prefix=\${bam%.bam}
         echo "Estraendo giunzioni da \$bam..."
         
-        # Usiamo la variabile trovata da Linux
         sh \$BAM2JUNC \$bam \${prefix}.junc
         
         echo \${prefix}.junc >> juncfiles.txt
     done
 
-    # 3. Clustering delle giunzioni
-    python \$CLUSTER_PY \\
-        -j juncfiles.txt \\
-        -m 50 \\
-        -o leafcutter_out/fornax \\
-        -l 500000
+    # 5. Clustering (messo su una riga singola per evitare errori di escape)
+    python \$CLUSTER_PY -j juncfiles.txt -m 50 -o leafcutter_out/fornax -l 500000
 
-    # 4. Differential Splicing
-    Rscript \$DS_R \\
-        --num_threads ${task.cpus} \\
-        leafcutter_out/fornax_perind_numers.counts.gz \\
-        groups_file.txt \\
-        -o leafcutter_out/fornax_ds
+    # 6. Differential Splicing
+    Rscript \$DS_R --num_threads ${task.cpus} leafcutter_out/fornax_perind_numers.counts.gz groups_file.txt -o leafcutter_out/fornax_ds
     """
+}
