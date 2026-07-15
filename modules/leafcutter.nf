@@ -12,7 +12,7 @@ process LEAFCUTTER {
 
     script:
     """
-    # 1. Generazione del file dei gruppi (groups_file.txt) richiesto da LeafCutter
+   # 1. Generazione del file dei gruppi (groups_file.txt)
     python -c "
 import csv, glob
 
@@ -27,7 +27,8 @@ with open('${samplesheet}', 'r') as f, open('groups_file.txt', 'w') as out:
         for b in bams:
             if b.startswith(sample) and not b[len(sample):len(sample)+1].isdigit():
                 prefix = b.replace('.bam', '')
-                out.write(f'{prefix}\\t{cond}\\n')
+                # Usiamo .format() per compatibilità e doppia backslash per l'escape
+                out.write('{}\\t{}\\n'.format(prefix, cond))
 "
 
     touch juncfiles.txt
