@@ -12,7 +12,7 @@ process LEAFCUTTER {
 
     script:
     """
-    # 1. Creazione file gruppi (corretto per evitare NameError)
+    # 1. Generazione file gruppi
     python -c "
 import csv, glob
 bams = glob.glob('*.bam')
@@ -27,33 +27,32 @@ with open('${samplesheet}', 'r') as f, open('groups_file.txt', 'w') as out:
                 out.write('{}\\t{}\\n'.format(prefix, cond))
 "
 
-    touch juncfiles.txt
     mkdir -p leafcutter_out
 
-    # 2. Localizzazione sicura degli script
-    # 'which' cerca nei percorsi standard del sistema, molto più affidabile di 'find'
-    BAM2JUNC=\$(which bam2junc.sh || echo '/opt/software/leafcutter/scripts/bam2junc.sh')
-    CLUSTER_PY=\$(which leafcutter_cluster.py || echo '/opt/software/leafcutter/clustering/leafcutter_cluster.py')
-    DS_R=\$(which leafcutter_ds.R || echo '/opt/software/leafcutter/scripts/leafcutter_ds.R')
+    # 2. Localizzazione DINAMICA (cerchiamo in tutto il filesystem)
+    # Rimuoviamo il fallback sbagliato, se non trova il file deve andare in errore 1
+    BAM2JUNC=\$(find / -name "bam2junc.sh" -type f 2>/dev/null | head -n 1)
+    CLUSTER_PY=\$(find / -name "leafcutter_cluster.py" -type f 2>/dev/null | head -n 1)
+    DS_R=\$(find / -name "leafcutter_ds.R" -type f 2>/dev/null | head -n 1)
 
-    # Controllo di sicurezza: se non troviamo gli script, blocchiamo subito
-    if [ ! -f "\$BAM2JUNC" ]; then echo "Errore: bam2junc.sh non trovato!"; exit 1; fi
+    # Verifica immediata: se uno è vuoto, ti dice chiaramente quale manca
+    if [ -z "\$BAM2JUNC" ]; then echo "Errore critico: bam2junc.sh non trovato nel container"; exit 1; fi
+    if [ -z "\$CLUSTER_PY" ]; then echo "Errore critico: leafcutter_cluster.py non trovato nel container"; exit 1; fi
+    if [ -z "\$DS_R" ]; then echo "Errore critico: leafcutter_ds.R non trovato nel container"; exit 1; fi
 
     # 3. Estrazione giunzioni
+    touch juncfiles.txt
     for bam in *.bam; do
         prefix=\${bam%.bam}
         echo "Estraendo giunzioni da \$bam..."
-        
-        # Esecuzione sicura
-        sh \$BAM2JUNC \$bam \${prefix}.junc
-        
-        echo \${prefix}.junc >> juncfiles.txt
+        sh "\$BAM2JUNC" "\$bam" "\${prefix}.junc"
+        echo "\${prefix}.junc" >> juncfiles.txt
     done
 
     # 4. Clustering
-    python \$CLUSTER_PY -j juncfiles.txt -m 50 -o leafcutter_out/fornax -l 500000
+    python "\$CLUSTER_PY" -j juncfiles.txt -m 50 -o leafcutter_out/fornax -l 500000
 
     # 5. Differential Splicing
-    Rscript \$DS_R --num_threads ${task.cpus} leafcutter_out/fornax_perind_numers.counts.gz groups_file.txt -o leafcutter_out/fornax_ds
+    Rscript "\$DS_R" --num_threads ${task.cpus} leafcutter_out/fornax_perind_numers.counts.gz groups_file.txt -o leafcutter_out/fornax_ds
     """
 }
