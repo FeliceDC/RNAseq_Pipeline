@@ -2,7 +2,7 @@ process MAJIQ {
     tag "MAJIQ (Local Splicing Variations)"
     label 'process_high'
 
-container 'biocontainers/majiq:v2.5.3_cv1'
+container 'quay.io/biocontainers/majiq:2.5.3--py310h30b5030_0'
 
     input:
     path bams
