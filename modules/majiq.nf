@@ -55,8 +55,9 @@ with open('majiq_config.ini', 'w') as config:
         -j ${task.cpus} \\
         -o majiq_build_out
 
-    COND1=\$(awk -F'=' '/^\\[experiments\\]/{flag=1; next} flag && NF {print \\$1; exit}' majiq_config.ini)
-    COND2=\$(awk -F'=' '/^\\[experiments\\]/{flag=1; next} flag && NF {NR++; if(NR==2) print \\$1; exit}' majiq_config.ini)
+    # Estrazione nomi condizioni in variabili Bash - CORRETTO L'ESCAPE
+    COND1=\$(awk -F'=' '/^\\[experiments\\]/{flag=1; next} flag && NF {print \$1; exit}' majiq_config.ini)
+    COND2=\$(awk -F'=' '/^\\[experiments\\]/{flag=1; next} flag && NF {NR++; if(NR==2) print \$1; exit}' majiq_config.ini)
 
     # 3. MAJIQ DeltaPSI
     majiq deltapsi \\
