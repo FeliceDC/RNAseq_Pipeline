@@ -52,13 +52,13 @@ with open('${samplesheet}', 'r') as f, open('groups_file.txt', 'w') as out:
     # 4. Clustering
     python "\$CLUSTER_PY" -j juncfiles.txt -m 50 -o leafcutter_out/fornax -l 500000
 
-    # 5. Differential Splicing
+   # 5. Differential Splicing
     Rscript "\$DS_R" \
         --num_threads ${task.cpus} \
         -i 2 \
         -m 5 \
+        -o leafcutter_out/fornax_ds \
         leafcutter_out/fornax_perind_numers.counts.gz \
-        groups_file.txt \
-        -o leafcutter_out/fornax_ds
+        groups_file.txt
     """
 }
