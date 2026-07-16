@@ -16,6 +16,7 @@ include { SPLICING_PLOTS as RMATS_PLOT } from '../modules/splicing_plots'
 include { SASHIMI_PLOT as RMATS_SASHIMI } from '../modules/splicing_sashimi_plot'
 include { MAJIQ } from '../modules/majiq'
 include { LEAFCUTTER } from '../modules/leafcutter'
+include { LEAFCUTTER_PLOT } from '../modules/leafcutter_plots'
 
 workflow RNA_SEQ_ANALYSIS {
     
@@ -65,6 +66,8 @@ workflow RNA_SEQ_ANALYSIS {
         
         ch_majiq_results       = Channel.empty()
         ch_leafcutter_results  = Channel.empty()
+        ch_leafcutter_plots    = Channel.empty()
+        ch_leafcutter_multiqc  = Channel.empty()
 
         // ESECUZIONI CONDIZIONALI
         if (!params.skip_fusions) {
@@ -119,7 +122,10 @@ workflow RNA_SEQ_ANALYSIS {
 
             if (tools.contains('leafcutter')) {
                 LEAFCUTTER(ch_bams_raccolti, file(params.samplesheet))
+                LEAFCUTTER_PLOT(LEAFCUTTER.out.leafcutter_results)
                 ch_leafcutter_results = LEAFCUTTER.out.leafcutter_results
+                ch_leafcutter_plots   = LEAFCUTTER_PLOT.out.plots
+                ch_leafcutter_multiqc = LEAFCUTTER_PLOT.out.multiqc_png
             }
         }
 
@@ -137,7 +143,8 @@ workflow RNA_SEQ_ANALYSIS {
             ch_arriba_multiqc,
             ch_imsig_multiqc,
             ch_deconv_multiqc,
-            ch_rmats_multiqc // <-- QUI HO RIMOSSO IL DOPPIONE
+            ch_rmats_multiqc,
+            ch_leafcutter_multiqc
         )
 
         MULTIQC( ch_multiqc_files.collect(), ch_multiqc_config )
@@ -167,4 +174,5 @@ workflow RNA_SEQ_ANALYSIS {
         rmats_sashimi         = ch_rmats_sashimi.flatten()
         majiq_results         = ch_majiq_results.flatten()
         leafcutter_results    = ch_leafcutter_results.flatten()
+        leafcutter_plots      = ch_leafcutter_plots.flatten()
 }
