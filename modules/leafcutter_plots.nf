@@ -61,6 +61,8 @@ process LEAFCUTTER_PLOT {
         p_volc <- ggplot(sig_data, aes(x=loglr, y=log10_fdr, color=Significance)) +
             geom_point(alpha=0.6, size=1.5) +
             scale_color_manual(values=c("Not Significant" = "grey60", "Significant" = "dodgerblue4")) +
+            geom_hline(yintercept = -log10(0.05), linetype = "dashed", color = "darkred", alpha = 0.5) +
+            geom_vline(xintercept = 2.0, linetype = "dashed", color = "darkred", alpha = 0.5) +
             theme_minimal(base_size = 14) +
             labs(title="LeafCutter: Differential Splicing Volcano Plot",
                  x="Log-Likelihood Ratio (Magnitude of Change)",
