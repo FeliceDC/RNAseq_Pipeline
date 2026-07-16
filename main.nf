@@ -81,6 +81,7 @@ publish:
         rmats_sashimi         = RNA_SEQ_ANALYSIS.out.rmats_sashimi
         majiq_results         = RNA_SEQ_ANALYSIS.out.majiq_results
         leafcutter_results    = RNA_SEQ_ANALYSIS.out.leafcutter_results
+        leafcutter_plots      = RNA_SEQ_ANALYSIS.out.leafcutter_plots
 }
 
 output {
@@ -105,5 +106,6 @@ output {
     rmats_sashimi         { path "${params.outdir}/Splicing/rMATS-turbo/Plots/Sashimi"; mode 'copy' }
     majiq_results         { path "${params.outdir}/Splicing/MAJIQ"; mode 'copy' }
     leafcutter_results    { path "${params.outdir}/Splicing/LeafCutter"; mode 'copy' }
+    leafcutter_plots      { path "${params.outdir}/Splicing/LeafCutter/Plots"; mode 'copy' }
 
 }
