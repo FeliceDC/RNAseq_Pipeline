@@ -14,25 +14,24 @@ process LEAFCUTTER {
     """
     # 1. Creiamo lo script Python separatamente per BLOCCARE gli errori di Groovy
     cat << 'EOF' > generate_groups.py
-    import csv, glob, sys
+import csv, glob, sys
     
-    samplesheet_file = sys.argv[1]
-    design_col = sys.argv[2]
+samplesheet_file = sys.argv[1]
+design_col = sys.argv[2]
     
-    bams = glob.glob('*.bam')
+bams = glob.glob('*.bam')
     
-    with open(samplesheet_file, 'r') as f, open('groups_file.txt', 'w') as out:
-        reader = csv.DictReader(f, skipinitialspace=True)
-        for row in reader:
-            sample = row['sample']
-            cond = row[design_col]
-            for b in bams:
-                if b.startswith(sample) and not b[len(sample):len(sample)+1].isdigit():
-                    prefix = b.replace('.bam', '')
-                    out.write("{}\\t{}\\n".format(prefix, cond))
-    EOF
+with open(samplesheet_file, 'r') as f, open('groups_file.txt', 'w') as out:
+    reader = csv.DictReader(f, skipinitialspace=True)
+    for row in reader:
+        sample = row['sample']
+        cond = row[design_col]
+        for b in bams:
+            if b.startswith(sample) and not b[len(sample):len(sample)+1].isdigit():
+                prefix = b.replace('.bam', '')
+                out.write("{}\\t{}\\n".format(prefix, cond))
+EOF
 
-    # 2. Eseguiamo lo script Python passando le variabili Nextflow in sicurezza
     python generate_groups.py ${samplesheet} ${params.design}
 
     mkdir -p leafcutter_out
@@ -55,16 +54,16 @@ process LEAFCUTTER {
         echo "\${prefix}.junc" >> juncfiles.txt
     done
 
-# 5. Clustering 
+    # 5. Clustering
     python "\$CLUSTER_PY" -j juncfiles.txt -m 50 -o leafcutter_out/leafcutter -l 500000
 
-    # 6. Differential Splicing 
-    Rscript "\$DS_R" \
-        --num_threads ${task.cpus} \
-        -i 2 \
-        -g 2 \
-        -o leafcutter_out/leafcutter_ds \
-        leafcutter_out/leafcutter_perind_numers.counts.gz \
+    # 6. Differential Splicing (con i parametri corretti per piccoli gruppi)
+    Rscript "\$DS_R" \\
+        --num_threads ${task.cpus} \\
+        -i 2 \\
+        -g 2 \\
+        -o leafcutter_out/leafcutter_ds \\
+        leafcutter_out/leafcutter_perind_numers.counts.gz \\
         groups_file.txt
     """
 }
