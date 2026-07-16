@@ -14,7 +14,6 @@ include { ARRIBA } from '../modules/arriba'
 include { RMATS } from '../modules/rmats'
 include { SPLICING_PLOTS as RMATS_PLOT } from '../modules/splicing_plots'
 include { SASHIMI_PLOT as RMATS_SASHIMI } from '../modules/splicing_sashimi_plot'
-include { MAJIQ } from '../modules/majiq'
 include { LEAFCUTTER } from '../modules/leafcutter'
 include { LEAFCUTTER_PLOT } from '../modules/leafcutter_plots'
 include { LEAFCUTTER_ANNOTATE } from '../modules/leafcutter_annotate'
@@ -65,7 +64,6 @@ workflow RNA_SEQ_ANALYSIS {
         ch_rmats_sashimi       = Channel.empty()
         ch_rmats_multiqc       = Channel.empty()
         
-        ch_majiq_results       = Channel.empty()
         ch_leafcutter_results  = Channel.empty()
         ch_leafcutter_plots    = Channel.empty()
         ch_leafcutter_multiqc  = Channel.empty()
@@ -114,11 +112,6 @@ workflow RNA_SEQ_ANALYSIS {
                 ch_rmats_plots   = RMATS_PLOT.out.plots
                 ch_rmats_sashimi = RMATS_SASHIMI.out.plots
                 ch_rmats_multiqc = RMATS_PLOT.out.multiqc_png
-            }
-
-            if (tools.contains('majiq')) {
-                MAJIQ(ch_bams_raccolti, file(params.samplesheet), ch_gtf)
-                ch_majiq_results = MAJIQ.out.majiq_results
             }
 
             if (tools.contains('leafcutter')) {
@@ -175,7 +168,6 @@ workflow RNA_SEQ_ANALYSIS {
         rmats_results         = ch_rmats_results.flatten()
         rmats_plots           = ch_rmats_plots.flatten()
         rmats_sashimi         = ch_rmats_sashimi.flatten()
-        majiq_results         = ch_majiq_results.flatten()
         leafcutter_results    = ch_leafcutter_results.flatten()
         leafcutter_plots      = ch_leafcutter_plots.flatten()
         leafcutter_annotated  = ch_leafcutter_annotated.flatten()
