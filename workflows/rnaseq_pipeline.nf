@@ -123,7 +123,7 @@ workflow RNA_SEQ_ANALYSIS {
                 ch_leafcutter_plots     = LEAFCUTTER_PLOT.out.plots
                 ch_leafcutter_multiqc   = LEAFCUTTER_PLOT.out.multiqc_png
             }
-            }
+            
         }
 
         // MULTIQC
