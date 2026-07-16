@@ -115,13 +115,14 @@ workflow RNA_SEQ_ANALYSIS {
             }
 
             if (tools.contains('leafcutter')) {
-                LEAFCUTTER(ch_bams_raccolti, file(params.samplesheet))
+               LEAFCUTTER(ch_bams_raccolti, file(params.samplesheet))
                 LEAFCUTTER_ANNOTATE(LEAFCUTTER.out.leafcutter_results, ch_gtf)
-                LEAFCUTTER_PLOT(LEAFCUTTER.out.leafcutter_results)   
-                ch_leafcutter_results = LEAFCUTTER.out.leafcutter_results
+                LEAFCUTTER_PLOT(LEAFCUTTER_ANNOTATE.out.annotated_results) 
+                ch_leafcutter_results   = LEAFCUTTER.out.leafcutter_results
                 ch_leafcutter_annotated = LEAFCUTTER_ANNOTATE.out.annotated_results
-                ch_leafcutter_plots   = LEAFCUTTER_PLOT.out.plots
-                ch_leafcutter_multiqc = LEAFCUTTER_PLOT.out.multiqc_png
+                ch_leafcutter_plots     = LEAFCUTTER_PLOT.out.plots
+                ch_leafcutter_multiqc   = LEAFCUTTER_PLOT.out.multiqc_png
+            }
             }
         }
 
