@@ -82,6 +82,7 @@ publish:
         majiq_results         = RNA_SEQ_ANALYSIS.out.majiq_results
         leafcutter_results    = RNA_SEQ_ANALYSIS.out.leafcutter_results
         leafcutter_plots      = RNA_SEQ_ANALYSIS.out.leafcutter_plots
+        leafcutter_annotated  = RNA_SEQ_ANALYSIS.out.leafcutter_annotated
 }
 
 output {
@@ -107,5 +108,6 @@ output {
     majiq_results         { path "${params.outdir}/Splicing/MAJIQ"; mode 'copy' }
     leafcutter_results    { path "${params.outdir}/Splicing/LeafCutter"; mode 'copy' }
     leafcutter_plots      { path "${params.outdir}/Splicing/LeafCutter/Plots"; mode 'copy' }
+    leafcutter_annotated  { path "${params.outdir}/Splicing/LeafCutter"; mode 'copy' }
 
 }
