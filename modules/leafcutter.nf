@@ -55,16 +55,16 @@ process LEAFCUTTER {
         echo "\${prefix}.junc" >> juncfiles.txt
     done
 
-    # 5. Clustering
-    python "\$CLUSTER_PY" -j juncfiles.txt -m 50 -o leafcutter_out/fornax -l 500000
+# 5. Clustering 
+    python "\$CLUSTER_PY" -j juncfiles.txt -m 50 -o leafcutter_out/leafcutter -l 500000
 
-    # 6. Differential Splicing (con i parametri corretti per piccoli gruppi)
-    Rscript "\$DS_R" \\
-        --num_threads ${task.cpus} \\
-        -i 2 \\
-        -g 2 \\
-        -o leafcutter_out/fornax_ds \\
-        leafcutter_out/fornax_perind_numers.counts.gz \\
+    # 6. Differential Splicing 
+    Rscript "\$DS_R" \
+        --num_threads ${task.cpus} \
+        -i 2 \
+        -g 2 \
+        -o leafcutter_out/leafcutter_ds \
+        leafcutter_out/leafcutter_perind_numers.counts.gz \
         groups_file.txt
     """
 }
