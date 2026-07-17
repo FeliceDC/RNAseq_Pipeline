@@ -41,7 +41,7 @@ workflow RNA_SEQ_ANALYSIS {
         ch_bams_raccolti = STAR_ALIGN.out.bam.map { it[1] }.collect()
         FEATURECOUNTS(ch_gtf, ch_bams_raccolti)
 
-        // Inizializzazione Canali di Sicurezza (Evitano crash se un modulo viene skippato)
+        // Inizializzazione Canali di Sicurezza 
         ch_arriba_fusions      = Channel.empty()
         ch_arriba_discarded    = Channel.empty()
         ch_arriba_plots        = Channel.empty()
@@ -67,6 +67,7 @@ workflow RNA_SEQ_ANALYSIS {
         ch_leafcutter_results  = Channel.empty()
         ch_leafcutter_plots    = Channel.empty()
         ch_leafcutter_multiqc  = Channel.empty()
+        ch_leafcutter_annotated = Channel.empty()
 
         // ESECUZIONI CONDIZIONALI
         if (!params.skip_fusions) {
