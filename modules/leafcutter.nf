@@ -45,14 +45,19 @@ EOF
     if [ -z "\$CLUSTER_PY" ]; then echo "Errore critico: leafcutter_cluster.py non trovato"; exit 1; fi
     if [ -z "\$DS_R" ]; then echo "Errore critico: leafcutter_ds.R non trovato"; exit 1; fi
 
-    # 4. Estrazione giunzioni
+# 4. Estrazione giunzioni
     touch juncfiles.txt
+    
     for bam in *.bam; do
         prefix=\${bam%.bam}
-        echo "Estraendo giunzioni da \$bam..."
-        sh "\$BAM2JUNC" "\$bam" "\${prefix}.junc"
         echo "\${prefix}.junc" >> juncfiles.txt
     done
+       
+    ls *.bam | xargs -I {} -P ${task.cpus} sh -c '
+        bam="{}"
+        prefix=\${bam%.bam}
+        sh "'\$BAM2JUNC'" "\$bam" "\${prefix}.junc" > /dev/null 2>&1
+    '
 
     # 5. Clustering
     python "\$CLUSTER_PY" -j juncfiles.txt -m 50 -o leafcutter_out/leafcutter -l 500000
