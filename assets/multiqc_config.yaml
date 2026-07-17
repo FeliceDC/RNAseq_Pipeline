@@ -52,10 +52,8 @@ report_section_order:
     order: -120
   rMATS_Volcano_SE:
     order: -130
-  DARTS_AI_Summary_BarChart:
+  LeafCutter_Volcano:
     order: -140
-  DARTS_AI_Volcano_SE:
-    order: -150
 
 # 3. TITOLI ELEGANTI (Rinomina la barra laterale)
 custom_data:
@@ -83,10 +81,8 @@ custom_data:
     section_name: "7. rMATS: Event Summary"
   rMATS_Volcano_SE:
     section_name: "7. rMATS: Volcano Plot"
-  DARTS_AI_Summary_BarChart:
-    section_name: "8. DARTS: Event Summary"
-  DARTS_AI_Volcano_SE:
-    section_name: "8. DARTS: Volcano Plot"
+  LeafCutter_Volcano:
+    section_name: "8. LeafCutter: Volcano Plot"
 
 # 4. RICERCA FILE (Solo per i file di testo)
 sp:
