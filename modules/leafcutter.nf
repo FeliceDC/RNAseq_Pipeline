@@ -21,7 +21,7 @@ design_col = sys.argv[2]
     
 bams = glob.glob('*.bam')
     
-with open(samplesheet_file, 'r') as f, open('groups_file.txt', 'w') as out:
+with open(samplesheet_file, 'rU') as f, open('groups_file.txt', 'w') as out:
     reader = csv.DictReader(f, skipinitialspace=True)
     for row in reader:
         sample = row['sample']
