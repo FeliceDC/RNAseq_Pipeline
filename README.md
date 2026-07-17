@@ -70,11 +70,14 @@ Now you should be ready to run the pipeline.
 | `--skip_fusions` | Salta l'analisi delle fusioni geniche (Arriba) |
 | `--skip_deconvolution` | Salta la stima dell'infiltrazione cellulare |
 | `--skip_differential` | Salta l'analisi differenziale (DESeq2/EnrichR) |
-| `--skip_splicing` | Salta l'analisi dello splicing alternativo (RMats/Darts) |
+| `--skip_splicing` | Salta l'analisi dello splicing alternativo (RMats/LeafCutter) |
+| `--splicing_tools` | Se non si desidera effettuare l'analisi con entrambi i tool di splicing alternativo, usare questo parametro per specificare quale dei due utilizzare scrivendo " --splicing_tools "rmats" " oppure " --splicing_tools "leafcutter" "  |
 | `--g gene_name` | Questo parametro riguarda l'esecuzione di Feature Count. La pipeline è impostata di default ad usare `gene_id``. Se invece si desidera ottenere questo tipo di output, aggiungere questo parametro |
 | `--strandedness` | La pipeline è impostata di default per utilizzare strandedness 0, ma puoi selezionare a piacere tra 0, 1 e 2 |
+| `--deseq2_pvalue` | Permette di impostare il valore di p-value per il filtraggio dei risultati di Deseq2. Di base, la pipeline utilizza pvalue=0.05 |
+| `--deseq2_logfc` | Permette di impostare il valore di log fold change per il filtraggio dei risultati di Deseq2. Di base, la pipeline utilizza logfc=1.5 |
 | `--single_end true` |  La pipeline è impostata per gestire autonomamente dati del tipo PAIRED END. Se invece si stanno usando dati del tipo SINGLE END aggiungere questo parametro |
-| `--enrichr_database` | Spericificare i database supportati da enrichr da voler utilizzare |
+| `--enrichr_database` | Spericificare i database da voler utilizzare tra quelli nativamente supportati da EnrichR |
 | `--outdir` | Puoi specificare una cartella diversa in cui verranno salvati i risultati |
 | `--max_cpus` | Puoi selezionare il numero massimo di cpu da impiegare. Il valore di default è impostato a 16 |
 | `--max_memory` | Puoi selezionare la quantità di ram da impiegare. Il valore di default è impostato a 64 GB |
