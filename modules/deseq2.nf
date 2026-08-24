@@ -2,7 +2,7 @@ process DESEQ2 {
     tag "Differential Analysis"
     label 'process_high'
    
-    container 'quay.io/biocontainers/bioconductor-deseq2:1.50.2--r45ha27e39d_0'
+    container 'quay.io/biocontainers/mulled-v2-8849acf39a43ddc833ad691d6ff400e193fa167b:a92e4a61c5638d3d93e624ddec11559648908476-0'
 
     input:
     path counts     
