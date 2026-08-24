@@ -14,9 +14,6 @@ include { ARRIBA } from '../modules/arriba'
 include { RMATS } from '../modules/rmats'
 include { SPLICING_PLOTS as RMATS_PLOT } from '../modules/splicing_plots'
 include { SASHIMI_PLOT as RMATS_SASHIMI } from '../modules/splicing_sashimi_plot'
-include { LEAFCUTTER } from '../modules/leafcutter'
-include { LEAFCUTTER_PLOT } from '../modules/leafcutter_plots'
-include { LEAFCUTTER_ANNOTATE } from '../modules/leafcutter_annotate'
 
 workflow RNA_SEQ_ANALYSIS {
     
@@ -63,11 +60,6 @@ workflow RNA_SEQ_ANALYSIS {
         ch_rmats_plots         = Channel.empty()
         ch_rmats_sashimi       = Channel.empty()
         ch_rmats_multiqc       = Channel.empty()
-        
-        ch_leafcutter_results  = Channel.empty()
-        ch_leafcutter_plots    = Channel.empty()
-        ch_leafcutter_multiqc  = Channel.empty()
-        ch_leafcutter_annotated = Channel.empty()
 
         // ESECUZIONI CONDIZIONALI
         if (!params.skip_fusions) {
@@ -101,31 +93,6 @@ workflow RNA_SEQ_ANALYSIS {
             ch_imsig_multiqc       = IMSIG.out.multiqc_png
         }
 
-        if (!params.skip_splicing) {
-            def tools = params.splicing_tools ? params.splicing_tools.tokenize(',') : []
-
-            if (tools.contains('rmats')) {
-                RMATS(ch_bams_raccolti, file(params.samplesheet), ch_gtf)
-                RMATS_PLOT(RMATS.out.splicing_results, 'rMATS')
-                RMATS_SASHIMI(ch_bams_raccolti, file(params.samplesheet), RMATS.out.splicing_results)
-                
-                ch_rmats_results = RMATS.out.splicing_results
-                ch_rmats_plots   = RMATS_PLOT.out.plots
-                ch_rmats_sashimi = RMATS_SASHIMI.out.plots
-                ch_rmats_multiqc = RMATS_PLOT.out.multiqc_png
-            }
-
-            if (tools.contains('leafcutter')) {
-               LEAFCUTTER(ch_bams_raccolti, file(params.samplesheet))
-                LEAFCUTTER_ANNOTATE(LEAFCUTTER.out.leafcutter_results, ch_gtf)
-                LEAFCUTTER_PLOT(LEAFCUTTER_ANNOTATE.out.annotated_results) 
-                ch_leafcutter_results   = LEAFCUTTER.out.leafcutter_results
-                ch_leafcutter_annotated = LEAFCUTTER_ANNOTATE.out.annotated_results
-                ch_leafcutter_plots     = LEAFCUTTER_PLOT.out.plots
-                ch_leafcutter_multiqc   = LEAFCUTTER_PLOT.out.multiqc_png
-            }
-            
-        }
 
         // MULTIQC
         ch_multiqc_config = Channel.fromPath("${projectDir}/assets/multiqc_config.yaml", checkIfExists: true)
@@ -142,7 +109,6 @@ workflow RNA_SEQ_ANALYSIS {
             ch_imsig_multiqc,
             ch_deconv_multiqc,
             ch_rmats_multiqc,
-            ch_leafcutter_multiqc
         )
 
         MULTIQC( ch_multiqc_files.collect(), ch_multiqc_config )
