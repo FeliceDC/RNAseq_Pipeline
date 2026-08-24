@@ -8,7 +8,6 @@ user_logfc  <- as.numeric(args[5])
 
 library(DESeq2)
 library(ggplot2)
-library(ggrepel)
 
 counts <- read.table(counts_file, header = TRUE, row.names = 1, stringsAsFactors = FALSE)
 meta <- read.csv(metadata_file, row.names = 1, stringsAsFactors = TRUE)
@@ -117,12 +116,10 @@ percentVar <- round(100 * attr(pca_data, "percentVar"))
 for (var_col in colnames(meta)) {
     pca_plot <- ggplot(pca_data, aes_string(x = "PC1", y = "PC2", color = var_col)) +
         geom_point(size = 4, alpha = 0.85) +
-        geom_text_repel(
+        geom_text(
             aes(label = name),
             size = 3.5,
-            max.overlaps = 20,
-            box.padding = 0.4,
-            point.padding = 0.3,
+            vjust = -1,
             show.legend = FALSE
         ) +
         xlab(paste0("PC1: ", percentVar[1], "% variance")) +
@@ -137,11 +134,8 @@ for (var_col in colnames(meta)) {
             legend.text = element_text(size = 10),
             axis.title = element_text(size = 11, face = "bold")
         )
-    
-    # Inserisce la pagina nel PDF
+
     print(pca_plot)
-    
-    # Salva il PNG per MultiQC / output singolo
     ggsave(paste0("deseq2_pca_", var_col, "_mqc.png"), plot = pca_plot, width = 10, height = 7, dpi = 300)
 }
 
