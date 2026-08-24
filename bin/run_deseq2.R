@@ -1,13 +1,14 @@
 #!/usr/bin/env Rscript
 args <- commandArgs(trailingOnly = TRUE)
-counts_file <- args [1]
-metadata_file <-args [2]
-user_design <-args[3]
+counts_file <- args[1]
+metadata_file <- args[2]
+user_design <- args[3]
 user_pvalue <- as.numeric(args[4])
 user_logfc  <- as.numeric(args[5])
 
 library(DESeq2)
 library(ggplot2)
+library(ggrepel)
 
 counts <- read.table(counts_file, header = TRUE, row.names = 1, stringsAsFactors = FALSE)
 meta <- read.csv(metadata_file, row.names = 1, stringsAsFactors = TRUE)
@@ -91,40 +92,60 @@ complete_table <- merge(res_df, normalized_counts, by="row.names", all=TRUE)
 colnames(complete_table)[1] <- "Gene_Name"
 complete_table <- complete_table[order(complete_table$padj), ]
 
-
 write.table(as.data.frame(complete_table), file="complete_table.txt", sep="\t", quote=FALSE, row.names=FALSE)
 
 #--- PLOTS ---
 
-pdf ("deseq2_plots.pdf")
+pdf("deseq2_plots.pdf", width = 10, height = 7)
 
-#MA plot
+# 1. MA plot
 plotMA(res, main="MA Plot (test nf-core)")
 
-#PCA plot
+# 2. PCA plot
 if (nrow(dds) < 1000) {
-    message("MLess than 1000 genes: using normTransform instead of vst for plots")
+    message("Less than 1000 genes: using normTransform instead of vst for plots")
     vsd <- normTransform(dds)
 } else {
     vsd <- vst(dds, blind=FALSE)
 }
 
-pca_groups <- trimws(unlist(strsplit(user_design, "\\+")))
+# Estrazione coordinate PCA con tutte le variabili dei metadati
+pca_data <- plotPCA(vsd, intgroup = colnames(meta), returnData = TRUE)
+percentVar <- round(100 * attr(pca_data, "percentVar"))
 
-pca_plot <- plotPCA(vsd, intgroup=pca_groups) + theme_minimal() + geom_point(size=4, alpha=0.9) + ggtitle("2. PCA") +
-  theme(
-    plot.title = element_text(hjust = 0.5, face = "bold", size = 15), 
-    panel.grid.major = element_line(color = "grey90"),                
-    panel.grid.minor = element_blank(),
-    legend.title = element_text(face="bold", size=12), 
-    legend.text = element_text(size = 11),                            
-    axis.title = element_text(size = 12, face = "bold")               
-  )
+# Ciclo su tutte le variabili del samplesheet
+for (var_col in colnames(meta)) {
+    pca_plot <- ggplot(pca_data, aes_string(x = "PC1", y = "PC2", color = var_col)) +
+        geom_point(size = 4, alpha = 0.85) +
+        geom_text_repel(
+            aes(label = name),
+            size = 3.5,
+            max.overlaps = 20,
+            box.padding = 0.4,
+            point.padding = 0.3,
+            show.legend = FALSE
+        ) +
+        xlab(paste0("PC1: ", percentVar[1], "% variance")) +
+        ylab(paste0("PC2: ", percentVar[2], "% variance")) +
+        ggtitle(paste("PCA - Colored by", var_col)) +
+        theme_minimal() +
+        theme(
+            plot.title = element_text(hjust = 0.5, face = "bold", size = 14),
+            panel.grid.major = element_line(color = "grey90"),
+            panel.grid.minor = element_blank(),
+            legend.title = element_text(face = "bold", size = 11),
+            legend.text = element_text(size = 10),
+            axis.title = element_text(size = 11, face = "bold")
+        )
+    
+    # Inserisce la pagina nel PDF
+    print(pca_plot)
+    
+    # Salva il PNG per MultiQC / output singolo
+    ggsave(paste0("deseq2_pca_", var_col, "_mqc.png"), plot = pca_plot, width = 10, height = 7, dpi = 300)
+}
 
-print(pca_plot)
-ggsave("deseq2_pca_mqc.png", plot = pca_plot, width = 12, height = 8, dpi = 300)
-
-#Volcano Plot
+# 3. Volcano Plot
 max_fc <- max(abs(res$log2FoldChange), na.rm=TRUE)
 limite_x <- max_fc * 1.1 
 with(res, plot(log2FoldChange, -log10(padj), pch=20, main="3. Volcano Plot", col="darkgrey", xlim=c(-limite_x, limite_x)))
@@ -139,7 +160,7 @@ abline(v=c(-user_logfc, user_logfc), col="blue", lty=2)
 abline(h=-log10(user_pvalue), col="blue", lty=2)
 dev.off()
 
-#Heatmap
+# 4. Heatmap
 top_genes <- head(order(res$padj), 50)
 mat <- assay(vsd)[top_genes, ]
 mat <- mat - rowMeans(mat)
@@ -148,10 +169,8 @@ colori_heatmap <- colorRampPalette(c("blue", "white", "red"))(256)
 
 heatmap(mat, scale="none", col=colori_heatmap, margins=c(6, 6), cexCol=0.9, cexRow=0.8, main="4. Heatmap Top 50 Genes")
 
-
 # 5. Top 6 genes counts plot
-par(mfrow=c(3,2), las=1) 
-
+pca_groups <- trimws(unlist(strsplit(user_design, "\\+")))
 main_condition <- pca_groups[length(pca_groups)]
 plot_colors <- c("#1f78b4", "#e31a1c", "#33a02c", "#ff7f00", "#6a3d9a", "#b15928")
 condition_factors <- as.factor(dds[[main_condition]])
@@ -161,26 +180,26 @@ dynamic_colors <- rep(plot_colors, length.out = num_groups)
 top6_genes <- head(order(res$padj), 6)
 
 if (length(top6_genes) > 0) {
-    top6_counts <- counts(dds, normalized=TRUE)[top6_genes, , drop = FALSE ]
+    par(mfrow=c(3,2), las=1)
+    top6_counts <- counts(dds, normalized=TRUE)[top6_genes, , drop = FALSE]
     absolute_max <- max(top6_counts)
     y_limit <- c(0.5, absolute_max + (absolute_max * 0.1))
 
     for (i in top6_genes) {
-      gene_name <- rownames(res)[i]
+        gene_name <- rownames(res)[i]
 
-      plotCounts(dds, 
-             gene = gene_name, 
-             intgroup = main_condition, 
-             main = paste("Expression of:", gene_name),
-             col = dynamic_colors[as.numeric(condition_factors)], 
-             pch = 16,                             
-             cex = 1.5,
-             ylim = y_limit 
-  )
-}
+        plotCounts(dds, 
+               gene = gene_name, 
+               intgroup = main_condition, 
+               main = paste("Expression of:", gene_name),
+               col = dynamic_colors[as.numeric(condition_factors)], 
+               pch = 16,                             
+               cex = 1.5,
+               ylim = y_limit 
+        )
+    }
 } else {
-  message("No significant genes found to plot in Top 6 counts.")
+    message("No significant genes found to plot in Top 6 counts.")
 }
-
 
 dev.off()
