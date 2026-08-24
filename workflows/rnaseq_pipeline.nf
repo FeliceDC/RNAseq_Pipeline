@@ -136,7 +136,4 @@ workflow RNA_SEQ_ANALYSIS {
         rmats_results         = ch_rmats_results.flatten()
         rmats_plots           = ch_rmats_plots.flatten()
         rmats_sashimi         = ch_rmats_sashimi.flatten()
-        leafcutter_results    = ch_leafcutter_results.flatten()
-        leafcutter_plots      = ch_leafcutter_plots.flatten()
-        leafcutter_annotated  = ch_leafcutter_annotated.flatten()
 }
