@@ -93,6 +93,17 @@ workflow RNA_SEQ_ANALYSIS {
             ch_imsig_multiqc       = IMSIG.out.multiqc_png
         }
 
+        if (!params.skip_splicing) {
+            RMATS(ch_bams_raccolti, file(params.samplesheet), ch_gtf)
+            RMATS_PLOT(RMATS.out.splicing_results, 'rMATS')
+            RMATS_SASHIMI(ch_bams_raccolti, file(params.samplesheet), RMATS.out.splicing_results)
+            
+            ch_rmats_results = RMATS.out.splicing_results
+            ch_rmats_plots   = RMATS_PLOT.out.plots
+            ch_rmats_sashimi = RMATS_SASHIMI.out.plots
+            ch_rmats_multiqc = RMATS_PLOT.out.multiqc_png
+        }
+
 
         // MULTIQC
         ch_multiqc_config = Channel.fromPath("${projectDir}/assets/multiqc_config.yaml", checkIfExists: true)
@@ -108,7 +119,7 @@ workflow RNA_SEQ_ANALYSIS {
             ch_arriba_multiqc,
             ch_imsig_multiqc,
             ch_deconv_multiqc,
-            ch_rmats_multiqc,
+            ch_rmats_multiqc
         )
 
         MULTIQC( ch_multiqc_files.collect(), ch_multiqc_config )
