@@ -1,5 +1,5 @@
 report_comment: "Automated RNA-seq pipeline report. Integrated analysis includes Quality Control, Alignment, Differential Expression, TME Deconvolution, and Alternative Splicing."
-title: "RNA-seq Analysis Report"
+title: "foRNAx Report"
 
 export_plots: true
 disable_version_detection: true
