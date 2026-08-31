@@ -14,15 +14,21 @@ process RMATS {
 
     script:
     """
-    python -c "
+python -c "
 import csv, os, glob
 bams = glob.glob('*.bam')
 groups = {}
-with open('${samplesheet}', 'r') as f:
+
+# Estrae l'ultimo fattore dal design (es. 'genotype' da 'sex + run + genotype')
+# Sostituisci la stringa sottostante con la tua variabile Nextflow, es: '${params.design}'
+design_string = 'genotype + run + sex' 
+main_cond = [x.strip() for x in design_string.split('+')][-1]
+
+with open('samplesheet.csv', 'r') as f:
     reader = csv.DictReader(f, skipinitialspace=True)
     for row in reader:
-        sample = row['sample']
-        cond = row['${params.design}']
+        sample = row['Run']  # Utilizza 'Run' come header corretto
+        cond = row[main_cond]
         if cond not in groups:
             groups[cond] = []
         for b in bams:
