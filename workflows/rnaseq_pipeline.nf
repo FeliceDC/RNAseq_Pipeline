@@ -70,9 +70,10 @@ workflow RNA_SEQ_ANALYSIS {
             ch_arriba_multiqc   = ARRIBA.out.multiqc_counts
         }
 
-        if (!params.skip_differential) {
+if (!params.skip_differential) {
             DESEQ2(FEATURECOUNTS.out.counts, file(params.samplesheet))
-            ENRICHR(DESEQ2.out.results_tables)
+            
+            ENRICHR(DESEQ2.out.results_tables.flatten())
             
             ch_deseq2_results  = DESEQ2.out.results_tables.mix(DESEQ2.out.results_pdf)
             ch_deseq2_multiqc  = DESEQ2.out.multiqc_png
