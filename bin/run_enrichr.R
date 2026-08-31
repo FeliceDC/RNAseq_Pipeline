@@ -30,6 +30,14 @@ if (is.null(opt$input)){
     stop("Wait: You must provide an input file using: --input", call.=FALSE)
 }
 
+# --- NUOVA AGGIUNTA: Estrazione dinamica del nome del contrasto ---
+# Rimuove il prefisso "filtered_results_" e l'estensione ".txt"
+# Es: "filtered_results_RAS_vs_NEG.txt" diventa "RAS_vs_NEG"
+file_name <- basename(opt$input)
+contrast_name <- gsub("^filtered_results_", "", file_name)
+contrast_name <- gsub("\\.txt$", "", contrast_name)
+# ------------------------------------------------------------------
+
 cat("Reading the DEGs gene file...\n")
 signif_genes <- read.table(opt$input, header=TRUE, sep="\t", stringsAsFactors=FALSE)
 
@@ -43,20 +51,22 @@ if (length(gene_list) == 0) {
 dbs <- unlist(strsplit(opt$databases, ","))
 setEnrichrSite("Enrichr") 
 
-cat(paste("Querying Enrichr for", length(gene_list), "genes...\n"))
+cat(paste("Querying Enrichr for", length(gene_list), "genes (Contrast:", contrast_name, ")...\n"))
 enriched <- enrichr(gene_list, dbs)
 
 for (db in dbs) {
-    write.csv(enriched[[db]], file=file.path(opt$outdir, paste0("Enrichr_", db, ".csv")), row.names=FALSE)
+    # Nomi dei file di output aggiornati con il nome del contrasto
+    write.csv(enriched[[db]], file=file.path(opt$outdir, paste0("Enrichr_", db, "_", contrast_name, ".csv")), row.names=FALSE)
     
     if (nrow(enriched[[db]]) > 0) {
-        pdf(file=file.path(opt$outdir, paste0("Barplot_", db, ".pdf")), width=10, height=6)
-        print(plotEnrich(enriched[[db]], showTerms = 15, numChar = 50, y = "Count", orderBy = "P.value", title = db))
+        pdf(file=file.path(opt$outdir, paste0("Barplot_", db, "_", contrast_name, ".pdf")), width=10, height=6)
+        # Aggiunto il contrasto anche nel titolo del grafico
+        print(plotEnrich(enriched[[db]], showTerms = 15, numChar = 50, y = "Count", orderBy = "P.value", title = paste(db, "-", contrast_name)))
         dev.off()
 
-      png(file=file.path(opt$outdir, paste0("Barplot_", db, "_mqc.png")), width=1400, height=800, res=150)
-      print(plotEnrich(enriched[[db]], showTerms = 15, numChar = 50, y = "Count", orderBy = "P.value", title = db))
-      dev.off()
+        png(file=file.path(opt$outdir, paste0("Barplot_", db, "_", contrast_name, "_mqc.png")), width=1400, height=800, res=150)
+        print(plotEnrich(enriched[[db]], showTerms = 15, numChar = 50, y = "Count", orderBy = "P.value", title = paste(db, "-", contrast_name)))
+        dev.off()
     }
 }
 cat("Pathways analysis completed succesfully\n")
