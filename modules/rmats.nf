@@ -19,18 +19,20 @@ import csv, os, glob
 bams = glob.glob('*.bam')
 groups = {}
 
-# Estrae l'ultimo fattore dal design (es. 'genotype' da 'sex + run + genotype')
-# Sostituisci la stringa sottostante con la tua variabile Nextflow, es: '${params.design}'
-design_string = 'genotype + run + sex' 
+# Sostituisci la stringa sottostante con la tua variabile Nextflow (es. '${params.design}')
+# Assicurati che la variabile di interesse sia l'ultima (es. 'sex + run + genotype')
+design_string = 'sex + run + genotype' 
 main_cond = [x.strip() for x in design_string.split('+')][-1]
 
 with open('samplesheet.csv', 'r') as f:
     reader = csv.DictReader(f, skipinitialspace=True)
     for row in reader:
-        sample = row['Run']  # Utilizza 'Run' come header corretto
+        sample = row['sample']  # Ripristinato a 'sample'
         cond = row[main_cond]
+        
         if cond not in groups:
             groups[cond] = []
+            
         for b in bams:
             if b.startswith(sample) and not b[len(sample):len(sample)+1].isdigit():
                 groups[cond].append(os.path.abspath(b))
