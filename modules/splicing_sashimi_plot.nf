@@ -10,37 +10,53 @@ process SASHIMI_PLOT {
 
     output:
     path "sashimi_out/Sashimi_plot/*.pdf", emit: plots, optional: true
+    path "sashimi_out/Sashimi_plot/*_mqc.png", emit: multiqc_png, optional: true
 
     script:
     """
     python -c "
-    import csv, os, glob
-    bams = glob.glob('*.bam')
-    groups = {}
-    with open('${samplesheet}', 'r') as f:
-        reader = csv.DictReader(f, skipinitialspace=True)
-        for row in reader:
-            sample = row['sample']
-            cond = row['${params.design}']
-            if cond not in groups:
-                groups[cond] = []
-            for b in bams:
-                if b.startswith(sample) and not b[len(sample):len(sample)+1].isdigit():
-                    groups[cond].append(os.path.abspath(b))
+import csv, os, glob
+bams = glob.glob('*.bam')
+groups = {}
+
+# Estrae dinamicamente l'ultima variabile del design passato da utente
+design_string = '${params.design}'
+main_cond = [x.strip() for x in design_string.split('+')][-1]
+
+with open('${samplesheet}', 'r') as f:
+    reader = csv.DictReader(f, skipinitialspace=True)
+    for row in reader:
+        sample = row['sample']
+        cond = row[main_cond]
+        
+        if cond not in groups:
+            groups[cond] = []
+            
+        for b in bams:
+            if b.startswith(sample) and not b[len(sample):len(sample)+1].isdigit():
+                groups[cond].append(os.path.abspath(b))
     
-    conds = list(groups.keys())
-    with open('b1.txt', 'w') as f1:
-        f1.write(','.join(groups[conds[0]]))
-    with open('b2.txt', 'w') as f2:
-        f2.write(','.join(groups[conds[1]]))
-    "
+conds = list(groups.keys())
+with open('b1.txt', 'w') as f1: f1.write(','.join(groups[conds[0]]))
+with open('b2.txt', 'w') as f2: f2.write(','.join(groups[conds[1]]))
+
+# Salva i nomi reali dei gruppi per rmats2sashimiplot
+with open('label1.txt', 'w') as l1: l1.write(conds[0])
+with open('label2.txt', 'w') as l2: l2.write(conds[1])
+"
+
+    # Legge le etichette per passarle al tool
+    L1=\$(cat label1.txt)
+    L2=\$(cat label2.txt)
+
     head -n 6 SE.MATS.JC.txt > top5_SE.txt
+    
     rmats2sashimiplot \\
         --b1 b1.txt \\
         --b2 b2.txt \\
         --event-type SE \\
         -e top5_SE.txt \\
-        --l1 Control --l2 Treated \\
+        --l1 \$L1 --l2 \$L2 \\
         --exon_s 1 --intron_s 5 \\
         -o sashimi_out
 
