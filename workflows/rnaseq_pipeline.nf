@@ -73,10 +73,12 @@ workflow RNA_SEQ_ANALYSIS {
 if (!params.skip_differential) {
             DESEQ2(FEATURECOUNTS.out.counts, file(params.samplesheet))
             
-            ENRICHR(DESEQ2.out.results_tables.flatten())
+            // Passiamo SOLTANTO i file filtrati a Enrichr, appiattiti
+            ENRICHR(DESEQ2.out.filtered_results.flatten())
             
-            ch_deseq2_results  = DESEQ2.out.results_tables.mix(DESEQ2.out.results_pdf)
-            ch_deseq2_multiqc  = DESEQ2.out.multiqc_png
+            // Aggiorna anche le variabili di output per la fine del workflow
+            ch_deseq2_results  = DESEQ2.out.raw_results.mix(DESEQ2.out.complete_tables, DESEQ2.out.filtered_results, DESEQ2.out.results_pdf)
+            ch_deseq2_multiqc  = DESEQ2.out.multiqc_png.mix(DESEQ2.out.pca_png)
             ch_enrichr_results = ENRICHR.out.enrichr_results
             ch_enrichr_multiqc = ENRICHR.out.multiqc_png
         }
