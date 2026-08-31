@@ -9,9 +9,13 @@ process DESEQ2 {
     path samplesheet  
 
     output:
-    path "*.{csv,txt}", emit: results_tables
-    path "*.pdf", emit: results_pdf
-    path "*_mqc.png", emit: multiqc_png, optional: true
+output:
+    path "filtered_results_*.txt", emit: filtered_results
+    path "deseq2_results_*.txt", emit: raw_results
+    path "complete_table_*.txt", emit: complete_tables
+    path "deseq2_plots.pdf", emit: results_pdf
+    path "deseq2_volcano_*_mqc.png", emit: multiqc_png
+    path "deseq2_pca_*_mqc.png", emit: pca_png
 
     script:
     """
