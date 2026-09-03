@@ -112,7 +112,7 @@ for (var_col in colnames(meta)) {
     ggsave(paste0("deseq2_pca_", var_col, "_mqc.png"), plot = pca_plot, width = 10, height = 7, dpi = 300)
 }
 
-# --- ANALISI COMBINATORIA PER TUTTI I CONTRASTI ---
+# --- ANALISI PER TUTTI I CONTRASTI ---
 cond_levels <- levels(dds[[main_condition]])
 contrast_pairs <- combn(cond_levels, 2, simplify = FALSE)
 
@@ -192,7 +192,7 @@ for (pair in contrast_pairs) {
                    ylim = y_limit 
             )
         }
-        par(mfrow=c(1,1)) # Resetta il layout
+        par(mfrow=c(1,1))
     }
 }
 
