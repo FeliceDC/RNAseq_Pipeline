@@ -19,8 +19,6 @@ import csv, os, glob
 bams = glob.glob('*.bam')
 groups = {}
 
-# Sostituisci la stringa sottostante con la tua variabile Nextflow (es. '${params.design}')
-# Assicurati che la variabile di interesse sia l'ultima (es. 'sex + run + genotype')
 design_string = 'sex + run + genotype' 
 main_cond = [x.strip() for x in design_string.split('+')][-1]
 
