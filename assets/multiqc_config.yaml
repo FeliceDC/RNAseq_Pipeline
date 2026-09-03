@@ -13,7 +13,7 @@ table_columns_visible:
   fastqc:
     percent_duplicates: False
 
-# 1. ORDINE DEI MODULI NATIVI
+# 1. ORDINE DEI MODULI DI BASE
 module_order:
   - fastqc:
       name: "FastQC (Raw Reads)"
@@ -24,7 +24,7 @@ module_order:
   - featurecounts:
       name: "featureCounts"
 
-# 2. ORDINE DI IMPAGINAZIONE CUSTOM (Numeri negativi per stare sotto ai nativi)
+# 2. ORDINE DI IMPAGINAZIONE
 report_section_order:
   deseq2_summary:
     order: -10
@@ -53,7 +53,7 @@ report_section_order:
   rMATS_Volcano_SE:
     order: -130
 
-# 3. TITOLI ELEGANTI (Rinomina la barra laterale)
+# 3. TITOLI
 custom_data:
   deseq2_summary:
     section_name: "2. DESeq2: Expression Summary"
@@ -80,7 +80,7 @@ custom_data:
   rMATS_Volcano_SE:
     section_name: "7. rMATS: Volcano Plot"
 
-# 4. RICERCA FILE (Solo per i file di testo)
+# 4. RICERCA FILE
 sp:
   deseq2_summary: {fn: "deseq2_summary_mqc.txt"}
   imsig_abundance: {fn: "imsig_abundance_mqc.txt"}
