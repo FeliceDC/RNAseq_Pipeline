@@ -45,7 +45,7 @@ with open('label1.txt', 'w') as l1: l1.write(conds[0])
 with open('label2.txt', 'w') as l2: l2.write(conds[1])
 "
 
-    # Legge le etichette per passarle al tool
+    # Lettura delle etichette per passarle al tool
     L1=\$(cat label1.txt)
     L2=\$(cat label2.txt)
 
