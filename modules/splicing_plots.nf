@@ -18,7 +18,7 @@ process SPLICING_PLOTS {
     library(ggplot2)
     prefix <- "${label}"
 
-    # Cerca il file ovunque si trovi (inclusa la sottocartella rmats_out)
+ 
     se_file <- list.files(pattern = "SE.MATS.JC.txt", recursive = TRUE, full.names = TRUE)
 
     # 1. VOLCANO PLOT
