@@ -30,9 +30,7 @@ if (is.null(opt$input)){
     stop("Wait: You must provide an input file using: --input", call.=FALSE)
 }
 
-# --- NUOVA AGGIUNTA: Estrazione dinamica del nome del contrasto ---
-# Rimuove il prefisso "filtered_results_" e l'estensione ".txt"
-# Es: "filtered_results_RAS_vs_NEG.txt" diventa "RAS_vs_NEG"
+#pulizia del nome del grafico
 file_name <- basename(opt$input)
 contrast_name <- gsub("^filtered_results_", "", file_name)
 contrast_name <- gsub("\\.txt$", "", contrast_name)
